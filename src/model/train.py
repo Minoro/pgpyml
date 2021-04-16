@@ -3,8 +3,8 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import metrics
-# from joblib import dump, load
-from pickle import dump
+from joblib import dump, load
+# from pickle import dump
 
 df = pd.read_csv('../../dataset/sample_data/iris_70.data', names=['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'class_name'])
 
@@ -22,8 +22,7 @@ prediction = model.predict(X_test)
 print('The accuracy of the model is {:.3f}'.format(metrics.accuracy_score(prediction, y_test)))
 
 print('Saving model...')
-with open('../../dataset/saved_models/decision_tree.pkl', 'w') as f:
-    dump(model, f)
+dump(model, '../../dataset/saved_models/decision_tree.joblib')
     
 print('Model saved!')
 
