@@ -12,7 +12,7 @@ CREATE TABLE iris (
 
 -- Load some samples used for traing
 COPY iris(sepal_length, sepal_width, petal_length, petal_width, class)
-FROM '/home/vagrant/vagrant_data/sample_data/iris_70.data'
+FROM '/home/vagrant/vagrant_data/dataset/sample_data/iris_70.data'
 DELIMITER ',';
 
 
@@ -26,7 +26,7 @@ petal_length = TD['new']['petal_length']
 petal_width = TD['new']['petal_width']
 features = [[sepal_length, sepal_width, petal_length, petal_width]]
 
-stmt = plpy.prepare("SELECT predict('/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', $1)", ['real[]'])
+stmt = plpy.prepare("SELECT predict('/home/vagrant/vagrant_data/dataset/saved_models/decision_tree.joblib', $1)", ['real[]'])
 results =  plpy.execute(stmt, [features], 1)
 
 prediction = results[0]['predict']
@@ -41,13 +41,20 @@ $$ LANGUAGE plpython3u;
 DROP TRIGGER IF EXISTS classify_iris
   ON iris;
 
--- Create a new trigger to classy the new data
 CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
-FOR EACH ROW EXECUTE PROCEDURE classify_iris();
+FOR EACH ROW 
+EXECUTE PROCEDURE classification_trigger(
+	'/home/vagrant/vagrant_data/dataset/saved_models/decision_tree.joblib', 
+	'class',
+	'sepal_length', 
+	'sepal_width', 
+	'petal_length', 
+	'petal_width' 
+);
 
 
--- TEST WITH SOME DATA (Available in /home/vagrant/vagrant_data/sample_data/iris_70.data)
+-- TEST WITH SOME DATA (Available in /home/vagrant/vagrant_data/dataset/sample_data/iris_30.data)
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.0,2.2,5.0,1.5);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.7,3.1,4.7,1.5);
