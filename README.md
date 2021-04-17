@@ -97,5 +97,15 @@ If you want to test this extension you can use the vagrant configuration inside 
 ```
 vagrant up	# Initiate the machine
 vagrant ssh # Acess the machine
-```
 
+# Change the postgres user password
+sudo passwd postgres
+
+# Login as postgres user
+su - postgres
+
+# Change the database user 'postgres' password to access Postgresql with md5 password
+psql
+ALTER USER postgres WITH PASSWORD 'new_password';
+```
+Now you can connect to Postgresql on host `http://localhost:5555` through your host machine.
