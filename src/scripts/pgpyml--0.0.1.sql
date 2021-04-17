@@ -1,7 +1,4 @@
 \echo Use "CREATE EXTENSION pgpyml" to load this file. \quit
- 
-CREATE EXTENSION IF NOT EXISTS plpython3u;
-
 
 /**
 * Predict the classification of the given features values
