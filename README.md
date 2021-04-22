@@ -79,12 +79,12 @@ CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', 	-- Model path
-	'class',																-- Column name to save the result
-	'sepal_length', 														-- Feature 1
-	'sepal_width',  														-- Feature 2
-	'petal_length', 														-- Feature 3
-	'petal_width'   														-- Feature 4
+	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', -- Model path
+	'class', -- Column name to save the result
+	'sepal_length', -- Feature 1
+	'sepal_width', -- Feature 2
+	'petal_length', -- Feature 3
+	'petal_width'-- Feature 4
 );
 ```
 
@@ -104,10 +104,10 @@ Besides that you can also apply your model in the data that are already stored i
 
 ```sql
 SELECT * FROM predict_table_row(
-	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib',	-- The trained model
-	'iris',																	-- Table with the data
-	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}',  		-- The columns used as feature
-	1																		-- The ID of your data
+	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', -- The trained model
+	'iris', -- Table with the data
+	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as feature
+	1 -- The ID of your data
 );
 ```
 
