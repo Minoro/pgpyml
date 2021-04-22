@@ -16,38 +16,22 @@ COPY iris(sepal_length, sepal_width, petal_length, petal_width, class)
 FROM '/home/vagrant/vagrant_data/sample_data/iris_70.data'
 DELIMITER ',';
 
-/*
--- You may also create a customized trigger function. 
--- Create a function to classify the data.
-CREATE OR REPLACE FUNCTION classify_iris() RETURNS trigger AS
-$$
+-- You can use the script /src/model/train_iris_decision_tree.py to train and save your model
+-- The model will be saved in /dataset/saved_models/iris_decision_tree.joblib
 
-sepal_length = TD['new']['sepal_length']
-sepal_width = TD['new']['sepal_width']
-petal_length = TD['new']['petal_length']
-petal_width = TD['new']['petal_width']
-features = [[sepal_length, sepal_width, petal_length, petal_width]]
-
-stmt = plpy.prepare("SELECT predict('/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', $1)", ['real[]'])
-results =  plpy.execute(stmt, [features], 1)
-
-prediction = results[0]['predict']
-TD['new']['class'] = prediction
-
-return 'MODIFY'
-
-$$ LANGUAGE plpython3u;
-*/
+-- When your model is ready you can create a trigger to classify the data you are storing in your database
+-- You can use the function classification_trigger to create a classification trigger.
+-- The first argument is the path to your model. The second one is the column where the classification result will be stored.
+-- Any argument after the second one will be used as a feature column that will feed your model.
 
 -- Drop trigger if it exists
-DROP TRIGGER IF EXISTS classify_iris
-  ON iris;
+-- DROP TRIGGER IF EXISTS classify_iris ON iris;
 
 CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', 
+	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', 
 	'class',
 	'sepal_length', 
 	'sepal_width', 
@@ -56,7 +40,7 @@ EXECUTE PROCEDURE classification_trigger(
 );
 
 
--- TEST WITH SOME DATA (Available in /home/vagrant/vagrant_data/sample_data/iris_30.data)
+-- Test the trigger with some data (Available in /home/vagrant/vagrant_data/sample_data/iris_30.data)
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.0,2.2,5.0,1.5);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.7,3.1,4.7,1.5);
@@ -103,7 +87,4 @@ INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (4.7,3.2,1.3,0.2);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.8,3.2,5.9,2.3);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (7.7,2.6,6.9,2.3);
-
-
-
 
