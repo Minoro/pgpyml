@@ -17,6 +17,10 @@ CREATE EXTENSION plpython3u;
 
 Then clone this repository and run:
 ```
+git clone https://github.com/Minoro/pgpyml.git
+
+cd pgpyml
+
 make install
 ```
 
@@ -48,11 +52,17 @@ Once your model are ready, you can use it right on your data stored on Postgres.
 
 You can use the `predict` function to apply the trained model on your stored data.
 ```sql
-SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', '{5.2,3.5,1.5,0.2}');
+-- Notice that the features are passed as a nested array
+SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
 
--- Output: Iris-setosa (or any other class your model predict)
+-- Output: {Iris-setosa} (or any other class your model predict)
+
+-- You can pass many features at once
+SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}');
+-- Output: {Iris-setosa,Iris-virginica}
+
 ```
-The first argument is the path to your trained model, this path must be reachable by your Postgres server. The second argument is the feature array, in this exeample are the values to be classifed.
+The first argument is the path to your trained model, this path must be reachable by your Postgres server. The second argument is a list of features array, each element of the list will have an element on the output. The output are an text array with the predictions of your model.
 
 You can also create a trigger to classify new data inserted on the table. You may use the function `classification_trigger` to help you create a trigger that use your trained model to classify your new data:
 ```sql
@@ -70,11 +80,11 @@ BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
 	'/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', -- Model path
-	'class', -- Column name to save the result
-	'sepal_length', -- Feature 1
-	'sepal_width',  -- Feature 2
-	'petal_length', -- Feature 3
-	'petal_width'   -- Feature 4
+	'class',														-- Column name to save the result
+	'sepal_length', 												-- Feature 1
+	'sepal_width',  												-- Feature 2
+	'petal_length', 												-- Feature 3
+	'petal_width'   												-- Feature 4
 );
 ```
 
@@ -90,7 +100,18 @@ INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (
 SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
 ```
 
+Besides that you can also apply your model in the data that are already stored in your database. To do that you can use the `predict_table_row` function. This function expects as the first argument the model you want to use, the second argument is the name of the table where the data is stored, the third argument is an array with the name of the columns that will be used as features by your model, and finally the forth argument is the id of the row you want to classify: 
 
+```sql
+SELECT * FROM predict_table_row(
+	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib',	-- The trained model
+	'iris',																	-- Table with the data
+	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}',  		-- The columns used as feature
+	1																		-- The ID of your data
+);
+```
+
+If you want to see another example you can look the `/src/example/example_wine.sql` file. The wine example use the [UCI Wine Dataset](https://archive.ics.uci.edu/ml/datasets/Wine) witch has more columns. This example also train an classifier and use a trigger to predict values for new data.
 
 # Vagrant
 If you want to test this extension you can use the vagrant configuration inside the directory `vagrant/Vagrantfile`, this machine use Ubuntu, has a Postgres 12 installed and map the default port `5432` to `5555` in the host machine. This respository will be maped inside `/home/vagrant/vagrant_data/` directory. To use this vagrant machine. inside `vagrant` directory, run:
