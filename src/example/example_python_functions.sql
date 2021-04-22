@@ -12,7 +12,6 @@ $$
   greeting = 'Hello, ' + name
   return greeting
 $$ LANGUAGE plpython3u;
-*/
 
 -- SELECT * FROM say_hello_world()
 
