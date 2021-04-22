@@ -41,10 +41,10 @@ from joblib import dump, load
 model = DecisionTreeClassifier()
 
 model.fit(X_train, y_train)
-dump(model, '/home/vagrant/vagrant_data/saved_models/decision_tree.joblib')
+dump(model, '/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib')
 ```
 
-If you want to see a full example, this repository has and example using the [UCI Iris Dataset](https://archive.ics.uci.edu/ml/datasets/Iris/). The data are splited in two CSV files inside `dataset/sample_data` folder, one you can use to train and test your model  and the other you may use to simulate a new data to insert on your database. The script `src/mode/train.py` has a full example how to train and save your model using this dataset.
+If you want to see a full example, this repository has and example using the [UCI Iris Dataset](https://archive.ics.uci.edu/ml/datasets/Iris/). The data are splited in two CSV files inside `dataset/sample_data` folder, one you can use to train and test your model  and the other you may use to simulate a new data to insert on your database. The script `src/mode/train_iris_decision_tree.py` has a full example how to train and save your model using this dataset.
 
 Once your model are ready, you can use it right on your data stored on Postgres.
 
@@ -53,12 +53,12 @@ Once your model are ready, you can use it right on your data stored on Postgres.
 You can use the `predict` function to apply the trained model on your stored data.
 ```sql
 -- Notice that the features are passed as a nested array
-SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
+SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
 
 -- Output: {Iris-setosa} (or any other class your model predict)
 
 -- You can pass many features at once
-SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}');
+SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}');
 -- Output: {Iris-setosa,Iris-virginica}
 
 ```
@@ -79,12 +79,12 @@ CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/saved_models/decision_tree.joblib', -- Model path
-	'class',														-- Column name to save the result
-	'sepal_length', 												-- Feature 1
-	'sepal_width',  												-- Feature 2
-	'petal_length', 												-- Feature 3
-	'petal_width'   												-- Feature 4
+	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', 	-- Model path
+	'class',																-- Column name to save the result
+	'sepal_length', 														-- Feature 1
+	'sepal_width',  														-- Feature 2
+	'petal_length', 														-- Feature 3
+	'petal_width'   														-- Feature 4
 );
 ```
 
