@@ -6,7 +6,10 @@ This repository contains an Postgres extension that allows you to run your machi
 
 This extension uses the plpython3u, so make sure this extension is installed and created:
 ```
-apt install postgresql-plpython3-12
+apt install postgresql-plpython3-<version>
+
+# substitute the <version> with the version of your Postgres, like
+# apt install postgresql-plpython3-12
 ```
 
 Then on Postgres:
