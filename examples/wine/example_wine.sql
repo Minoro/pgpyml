@@ -3,17 +3,17 @@
 * https://archive.ics.uci.edu/ml/datasets/Wine
 * 
 * The data was splited in two sets. One with 70% of the data and another with 30%.
-* The first set is in the file /dataset/sample_data/wine_70.data, this set will be
+* The first set is in the file examples/wine/dataset/wine_70.data, this set will be
 * used to train our model to classify new data
-* The second set is in the file /dataset/sample_data/wine_30.data, this simulate new
+* The second set is in the file examples/wine/dataset/wine_30.data, this simulate new
 * data that we will store in our table.
 *
 * We will create a table and store the data used to train the model in the
-* /scr/model/train_wine_naive_bayes.py script.
-* After that, we will save our model in the directory in /dataset/saved_models/wine_naive_bayes.joblib
+* examples/wine/model/train_wine_naive_bayes.py script.
+* After that, we will save our model in the directory in examples/wine/model/wine_naive_bayes.joblib
 *
 * With our trained model, we will create a trigger to classify new data and 
-* store the classification result in the 'alcohol' column.
+* store the classification result in the 'wine_class' column.
 */
 
 -- Create the table where we will store our data
@@ -52,15 +52,15 @@ COPY wine(
 	od280,
 	proline
 )
-FROM '/home/vagrant/vagrant_data/sample_data/wine_70.data'
+FROM '/home/vagrant/vagrant_data/wine/dataset/wine_70.data'
 DELIMITER ',';
 
--- You can run the /scr/mode/train_wine_naive_bayes.py to train and save your model
+-- You can run the example/wine/models/train_wine_naive_bayes.py to train and save your model
 -- The model will use the values in the column 'wine_class' as target
 
 -- If you want to see the results of your model over your stored data you can use the predict_table_row function
 SELECT * FROM predict_table_row(
-	'/home/vagrant/vagrant_data/saved_models/wine_naive_bayes.joblib',                      -- The trained model
+	'/home/vagrant/vagrant_data/wine/models/wine_naive_bayes.joblib',                      -- The trained model
 	'wine',                                                                                 -- Table with the data
 	'{"alcohol", "malic_acid", "ash", "alcalinity", "magnesium", "phenols",                 
 	"flavanoids", "nonflavanoid", "proanthocyanins", "color", "hue", "od280", "proline"}',  -- The columns used as feature
@@ -76,7 +76,7 @@ CREATE TRIGGER classify_wine
 BEFORE INSERT OR UPDATE ON "wine"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/saved_models/wine_naive_bayes.joblib', -- Model
+	'/home/vagrant/vagrant_data/wine/models/wine_naive_bayes.joblib', -- Model
 	'wine_class', -- Column where you will store the result of the classification
     'alcohol', -- Features
 	'malic_acid',
@@ -116,7 +116,7 @@ VALUES (14.83,1.64,2.17,14,97,2.8,2.98,.29,1.98,5.2,1.08,2.85,1045);
 SELECT * FROM wine WHERE id = (SELECT MAX(id) FROM wine);
 
 /**
--- If you want to insert the data available in the file /dataset/sample_data/wine_30.data in your database to test the new trigger you can use the following commands.
+-- If you want to insert the data available in the file examples/wine/dataset/wine_30.data in your database to test the new trigger you can use the following commands.
 INSERT INTO wine (alcohol, malic_acid, ash, alcalinity, magnesium, phenols, flavanoids, nonflavanoid, proanthocyanins, color, hue, od280, proline) VALUES (14.83,1.64,2.17,14,97,2.8,2.98,.29,1.98,5.2,1.08,2.85,1045);
 INSERT INTO wine (alcohol, malic_acid, ash, alcalinity, magnesium, phenols, flavanoids, nonflavanoid, proanthocyanins, color, hue, od280, proline) VALUES (12.33,1.1,2.28,16,101,2.05,1.09,.63,.41,3.27,1.25,1.67,680);
 INSERT INTO wine (alcohol, malic_acid, ash, alcalinity, magnesium, phenols, flavanoids, nonflavanoid, proanthocyanins, color, hue, od280, proline) VALUES (13.86,1.35,2.27,16,98,2.98,3.15,.22,1.85,7.22,1.01,3.55,1045);

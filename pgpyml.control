@@ -1,5 +1,5 @@
 # pgpyml extension
 comment = 'Use your python machine learning models in your database'
-default_version = '0.0.2'
+default_version = '0.1.0'
 module_pathname = '$libdir/pgpyml'
 relocatable = false

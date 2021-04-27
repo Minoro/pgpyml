@@ -28,7 +28,7 @@ csv_columns = [
 	'proline'
 ]
 
-df = pd.read_csv('/home/vagrant/vagrant_data/sample_data/wine_70.data', names=csv_columns)
+df = pd.read_csv('../wine_70.data', names=csv_columns)
 
 train, test = train_test_split(df, test_size = 0.3, stratify = df['wine_class'], random_state = RANDOM_STATE)
 X_train = train[csv_columns[1:]]
@@ -43,7 +43,7 @@ prediction = model.predict(X_test)
 print('The accuracy of the model is {:.3f}'.format(metrics.accuracy_score(prediction, y_test)))
 
 print('Saving model...')
-dump(model, '/home/vagrant/vagrant_data/saved_models/wine_naive_bayes.joblib')
+dump(model, './wine_naive_bayes.joblib')
     
 print('Model saved!')
 print('Done!')

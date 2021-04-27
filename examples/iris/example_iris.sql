@@ -13,10 +13,10 @@ CREATE TABLE iris (
 
 -- Load some samples used for traing
 COPY iris(sepal_length, sepal_width, petal_length, petal_width, class)
-FROM '/home/vagrant/vagrant_data/sample_data/iris_70.data'
+FROM '/home/vagrant/vagrant_data/iris/dataset/iris_70.data'
 DELIMITER ',';
 
--- You can use the script /src/model/train_iris_decision_tree.py to train and save your model
+-- You can use the script example/iris/models/train_iris_decision_tree.py to train and save your model
 -- The model will be saved in /dataset/saved_models/iris_decision_tree.joblib
 
 -- When your model is ready you can create a trigger to classify the data you are storing in your database
@@ -31,7 +31,7 @@ CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', 
+	'/home/vagrant/vagrant_data/iris/models/iris_decision_tree.joblib', 
 	'class',
 	'sepal_length', 
 	'sepal_width', 
@@ -40,7 +40,7 @@ EXECUTE PROCEDURE classification_trigger(
 );
 
 
--- Test the trigger with some data (Available in /home/vagrant/vagrant_data/sample_data/iris_30.data)
+-- Test the trigger with some data (Available in examples/iris/dataset/iris_30.data)
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.0,2.2,5.0,1.5);
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.7,3.1,4.7,1.5);

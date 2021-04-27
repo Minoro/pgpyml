@@ -1,0 +1,46 @@
+{
+    "name": "pgpyml",
+    "abstract": "Use your Python machine learning models inside Postgres.",
+    "description": "This extension allows you to run your machine learning algorithms written in python and invoke them on Postgres.",
+    "version": "0.1.0",
+    "maintainer": [
+       "André Minoro Fusioka <amfusioka@gmail.com>"
+    ],
+    "provides": {
+       "pair": {
+          "abstract": "Use your Python machine learning models inside Postgres.",
+          "file": "sql/pgpyml.sql",
+          "docfile": "README.md",
+          "version": "0.1.0"
+       }
+    },
+    "resources": {
+       "bugtracker": {
+          "web": "https://github.com/Minoro/pgpyml/issues/"
+       },
+       "repository": {
+         "url":  "https://github.com/Minoro/pgpyml.git",
+         "web":  "https://github.com/Minoro/pgpyml",
+         "type": "git"
+       }
+    },
+    "generated_by": "André Minoro Fusioka",
+    "meta-spec": {
+       "version": "1.0.0",
+       "url": "http://pgxn.org/meta/spec.txt"
+    },
+    "tags": [
+       "machine learning",
+       "python",
+       "in-database classification",
+       "artificial intelligence",
+       "sklearn"
+    ],
+    "prereqs": {
+        "runtime": {
+            "requires": {
+                "plpython3u": 0
+            }
+        }
+    }
+ }

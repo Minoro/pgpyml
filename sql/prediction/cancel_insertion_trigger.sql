@@ -87,6 +87,7 @@ prediction = results[0]['predict'][0]
 
 if prediction != expected_value:
 	plpy.error('The value {} is not allowed'.format(prediction))
+	return None
 
 return 'MODIFY'
 
@@ -119,6 +120,7 @@ prediction = results[0]['predict'][0]
 
 if prediction != compare_value:
 	plpy.error('The value {} is not allowed'.format(prediction))
+	return None
 
 TD['new'][target_column_name] = prediction
 
