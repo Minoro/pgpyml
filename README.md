@@ -44,7 +44,7 @@ from joblib import dump, load
 model = DecisionTreeClassifier()
 
 model.fit(X_train, y_train)
-dump(model, '/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib')
+dump(model, './iris_decision_tree.joblib')
 ```
 
 If you want to see a full example, this repository has and example using the [UCI Iris Dataset](https://archive.ics.uci.edu/ml/datasets/Iris/). The data are splited in two CSV files inside `dataset/sample_data` folder, one you can use to train and test your model  and the other you may use to simulate a new data to insert on your database. The script `src/mode/train_iris_decision_tree.py` has a full example how to train and save your model using this dataset.
@@ -56,12 +56,12 @@ Once your model are ready, you can use it right on your data stored on Postgres.
 You can use the `predict` function to apply the trained model on your stored data.
 ```sql
 -- Notice that the features are passed as a nested array
-SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
+SELECT * FROM predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
 
 -- Output: {Iris-setosa} (or any other class your model predict)
 
 -- You can pass many features at once
-SELECT * FROM predict('/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}');
+SELECT * FROM predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}');
 -- Output: {Iris-setosa,Iris-virginica}
 
 ```
@@ -82,7 +82,7 @@ CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', -- Model path
+	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', -- Model path
 	'class', -- Column name to save the result
 	'sepal_length', -- Feature 1
 	'sepal_width', -- Feature 2
@@ -99,7 +99,7 @@ After creating the trigger you can insert new data on the table, and the result 
 -- Notice that the class is not being inserted, but will be added by the trigger function
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
 
--- Check the last inserted row
+-- Check the last inserted row, it will have the column 'class' filled
 SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
 ```
 
@@ -107,17 +107,119 @@ Besides that you can also apply your model in the data that are already stored i
 
 ```sql
 SELECT * FROM predict_table_row(
-	'/home/vagrant/vagrant_data/saved_models/iris_decision_tree.joblib', -- The trained model
+	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', -- The trained model
 	'iris', -- Table with the data
 	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as feature
 	1 -- The ID of your data
 );
 ```
+## Aborting insertions based on the predictions
 
-If you want to see another example you can look the `/src/example/example_wine.sql` file. The wine example use the [UCI Wine Dataset](https://archive.ics.uci.edu/ml/datasets/Wine) witch has more columns. This example also train an classifier and use a trigger to predict values for new data.
+Sometimes you may want to avoid the insertion of some items that belongs to a specific class, like transactions identified as fraudulent, to this purpose you can use `trigger_abort_if_prediction_is` function to create a trigger to cancel the insertion of the undesired class:
+
+```sql
+CREATE TRIGGER abort_if_iris_setosa
+BEFORE INSERT ON "iris"
+FOR EACH ROW 
+EXECUTE PROCEDURE trigger_abort_if_prediction_is(
+	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
+	'Iris-setosa', -- avoid the insertion of Iris-setosa
+	'sepal_length', 
+	'sepal_width', 
+	'petal_length', 
+	'petal_width' 
+);
+
+-- Insert a Iris-versicolor
+INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.0,2.2,5.0,1.5);
+
+-- Try to insert a Iris-setosa, but will raise an exception
+INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
+
+-- Show the last inserted row, that should be the Iris-versicolor
+SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
+```
+
+The first argument of the function `trigger_abort_if_prediction_is` is the path to the model to be used, the second one is the class that should be avoided, it will cancel the insertion if the prediction is equals to this class. Any other argument will be used as colunms name to get the values to be predicted.
+
+In the same way, you may want to avoid insertions unless the row belongs to a specific class (e.g. only accept transactions classified as "trustful"). The function `trigger_abort_unless_prediction_is` can help you to achieve that, it will cancel the insertion unless the predicted class belongs to the specified class:
+
+```sql
+-- Drop the other trigger if you have created it.
+-- DROP TRIGGER abort_if_iris_setosa ON iris;
+
+CREATE TRIGGER abort_unless_is_iris_setosa
+BEFORE INSERT ON "iris"
+FOR EACH ROW 
+EXECUTE PROCEDURE trigger_abort_unless_prediction_is(
+	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
+	'Iris-setosa', -- only accept insertion if the prediction match this value
+	'sepal_length', 
+	'sepal_width', 
+	'petal_length', 
+	'petal_width' 
+);
+
+-- Insert a new row (Iris-setosa) 
+INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
+
+-- Try to insert a new row (Iris-versicolor), buit will raise an exception
+INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.0,2.2,5.0,1.5);
+
+
+-- Show the last inserted row, that should be the Iris-setosa
+SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
+```
+
+## Predicting and inserting or aborting insertions
+
+If you are following the examples you will notice that the `class` column is allways been filled, but the functions `trigger_abort_if_prediction_is` and `trigger_abort_unless_prediction_is` do not fill that column, the triggers generated by this functions only abort the insertion. The classification is been done by the `classify_iris` tigger, generated by `classification_trigger` function. If you drop this trigger and try to insert a new row, you will notice that the `class` column is `NULL`:
+
+```sql
+-- Drop the classification triger
+DROP TRIGGER classify_iris ON iris;
+
+-- If the 'abort_unless_is_iris_setosa' trigger still acting on the table you can insert a new Iris-setosa
+INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
+
+-- You will notice that the new row was inserted, but the `class` column is NULL
+SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
+```
+
+The `trigger_abort_*` function are designed only to cancel operations, but some times can be useful to save the prediction if the operations succeeds. You can do that using this functions in combination with `classification_trigger`, but the `pgpyml` extension offers you functions to generate trigger that do both actions at once, this way you can create a single trigger to avoid undesired insertions and save the classification if it succeeds. To do that you can use the functions `trigger_classification_or_abort_if_prediction_is` and `trigger_classification_or_abort_unless_prediction_is`:
+
+```sql
+-- Drop the trigger if needed
+-- DROP TRIGGER abort_unless_is_iris_setosa ON iris;
+
+-- Create a new trigger to classify the data or abort if needed
+CREATE TRIGGER abort_unless_is_iris_setosa
+BEFORE INSERT ON "iris"
+FOR EACH ROW 
+EXECUTE PROCEDURE trigger_classification_or_abort_unless_prediction_is(
+	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
+	'class', -- column where the prediction will be stored
+	'Iris-setosa', -- avoid the insertion of iris-setosa
+	'sepal_length', 
+	'sepal_width', 
+	'petal_length', 
+	'petal_width' 
+);
+
+-- If you try to insert a Iris-versicolor it will fail
+INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (6.0,2.2,5.0,1.5);
+
+-- Insert an Iris-setosa
+INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);
+
+-- The 'class' column will be filled
+SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
+```
+
+The `trigger_classification_or_abort_if_prediction_is` and `trigger_classification_or_abort_unless_prediction_is` accept the same paremeters, the first one is the path to the model that will do the predictions, the second one the name of the column that will store the prediction, the thrid value is the prediction expected, and the others parameters will be used as columns name to get the values used in the prediction.
 
 # Vagrant
-If you want to test this extension you can use the vagrant configuration inside the directory `vagrant/Vagrantfile`, this machine use Ubuntu, has a Postgres 12 installed and map the default port `5432` to `5555` in the host machine. This respository will be maped inside `/home/vagrant/vagrant_data/` directory. To use this vagrant machine. inside `vagrant` directory, run:
+If you want to test this extension you can use the vagrant configuration inside the directory `vagrant/Vagrantfile`, this machine use Ubuntu, has a Postgres 12 installed and map the default port `5432` to `5555` in the host machine. This respository will be maped inside `/home/vagrant/examples/` directory. To use this vagrant machine. inside `vagrant` directory, run:
 ```
 vagrant up	# Initiate the machine
 vagrant ssh # Acess the machine

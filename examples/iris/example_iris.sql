@@ -1,6 +1,9 @@
 -- Create a new database
 -- CREATE DATABASE machine_learning;
 
+-- Create the extesion
+-- CREATE EXTENSION pgpyml;
+
 -- Create the basic table
 CREATE TABLE iris (
 	id SERIAL PRIMARY KEY,
@@ -13,7 +16,7 @@ CREATE TABLE iris (
 
 -- Load some samples used for traing
 COPY iris(sepal_length, sepal_width, petal_length, petal_width, class)
-FROM '/home/vagrant/vagrant_data/iris/dataset/iris_70.data'
+FROM '/home/vagrant/examples/iris/dataset/iris_70.data'
 DELIMITER ',';
 
 -- You can use the script example/iris/models/train_iris_decision_tree.py to train and save your model
@@ -31,7 +34,7 @@ CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/iris/models/iris_decision_tree.joblib', 
+	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
 	'class',
 	'sepal_length', 
 	'sepal_width', 
@@ -39,6 +42,19 @@ EXECUTE PROCEDURE classification_trigger(
 	'petal_width' 
 );
 
+
+-- If you want to avoid the insertion of a specific class you can use the following trigger
+CREATE TRIGGER abor_if_iris_setosa
+BEFORE INSERT OR UPDATE ON "iris"
+FOR EACH ROW 
+EXECUTE PROCEDURE trigger_abort_if_prediction_is(
+	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
+	'Iris-setosa', -- avoid the insertion of iris-setosa
+	'sepal_length', 
+	'sepal_width', 
+	'petal_length', 
+	'petal_width' 
+);
 
 -- Test the trigger with some data (Available in examples/iris/dataset/iris_30.data)
 INSERT INTO iris (sepal_length, sepal_width, petal_length, petal_width) VALUES (5.2,3.5,1.5,0.2);

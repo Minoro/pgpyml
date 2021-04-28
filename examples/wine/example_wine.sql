@@ -52,7 +52,7 @@ COPY wine(
 	od280,
 	proline
 )
-FROM '/home/vagrant/vagrant_data/wine/dataset/wine_70.data'
+FROM '/home/vagrant/examples/wine/dataset/wine_70.data'
 DELIMITER ',';
 
 -- You can run the example/wine/models/train_wine_naive_bayes.py to train and save your model
@@ -60,7 +60,7 @@ DELIMITER ',';
 
 -- If you want to see the results of your model over your stored data you can use the predict_table_row function
 SELECT * FROM predict_table_row(
-	'/home/vagrant/vagrant_data/wine/models/wine_naive_bayes.joblib',                      -- The trained model
+	'/home/vagrant/examples/wine/models/wine_naive_bayes.joblib',                      -- The trained model
 	'wine',                                                                                 -- Table with the data
 	'{"alcohol", "malic_acid", "ash", "alcalinity", "magnesium", "phenols",                 
 	"flavanoids", "nonflavanoid", "proanthocyanins", "color", "hue", "od280", "proline"}',  -- The columns used as feature
@@ -76,7 +76,7 @@ CREATE TRIGGER classify_wine
 BEFORE INSERT OR UPDATE ON "wine"
 FOR EACH ROW 
 EXECUTE PROCEDURE classification_trigger(
-	'/home/vagrant/vagrant_data/wine/models/wine_naive_bayes.joblib', -- Model
+	'/home/vagrant/examples/wine/models/wine_naive_bayes.joblib', -- Model
 	'wine_class', -- Column where you will store the result of the classification
     'alcohol', -- Features
 	'malic_acid',
