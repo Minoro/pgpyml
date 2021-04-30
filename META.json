@@ -6,6 +6,7 @@
     "maintainer": [
        "André Minoro Fusioka <amfusioka@gmail.com>"
     ],
+    "license": "postgresql",
     "provides": {
        "pair": {
           "abstract": "Use your Python machine learning models inside Postgres.",
