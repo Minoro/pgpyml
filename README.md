@@ -8,14 +8,14 @@ This extension uses the plpython3u, so make sure this extension is installed and
 ```
 apt install postgresql-plpython3-<version>
 
-# substitute the <version> with the version of your Postgres, like
-# apt install postgresql-plpython3-12
-```
+# Substitute the <version> with the version of your Postgres, like
+# apt install postgresql-plpython3-13
 
-Then on Postgres:
+# Install pip and pgxnclient
+apt install python3-pip pgxnclient
 
-```sql
-CREATE EXTENSION plpython3u;
+# Install your python libraries
+pip3 install numpy scikit-learn pandas
 ```
 
 Then clone this repository and run:
@@ -29,6 +29,10 @@ make install
 
 And finally create the extension on your database:
 ```sql
+-- Python Language extension
+CREATE EXTENSION plpython3u;
+
+-- This extension
 CREATE EXTENSION pgpyml;
 ```
 
@@ -219,7 +223,7 @@ SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
 The `trigger_classification_or_abort_if_prediction_is` and `trigger_classification_or_abort_unless_prediction_is` accept the same paremeters, the first one is the path to the model that will do the predictions, the second one the name of the column that will store the prediction, the thrid value is the prediction expected, and the others parameters will be used as columns name to get the values used in the prediction.
 
 # Vagrant
-If you want to test this extension you can use the vagrant configuration inside the directory `vagrant/Vagrantfile`, this machine use Ubuntu, has a Postgres 12 installed and map the default port `5432` to `5555` in the host machine. This respository will be maped inside `/home/vagrant/examples/` directory. To use this vagrant machine. inside `vagrant` directory, run:
+If you want to test this extension you can use the vagrant configuration inside the directory `vagrant/Vagrantfile`, this machine use Ubuntu, has a Postgres 13 installed and map the default port `5432` to `5555` in the host machine. This respository will be maped inside `/home/vagrant/examples/` directory. To use this vagrant machine. inside `vagrant` directory, run:
 ```
 vagrant up	# Initiate the machine
 vagrant ssh # Acess the machine
@@ -235,3 +239,7 @@ psql
 ALTER USER postgres WITH PASSWORD 'new_password';
 ```
 Now you can connect to Postgresql on host `http://localhost:5555` through your host machine.
+
+# License
+
+`pgpyml` is released under the PostgreSQL License.
