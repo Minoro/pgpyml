@@ -2,6 +2,8 @@
 
 This repository contains an Postgres extension that allows you to run your machine learning algorithms written in python and invoke them on Postgres. This way you can write your script in the way you are used to, and apply it right on your data. You can train and save your `sklearn` models and call then with the data stored on Postgres.
 
+[![PGXN version](https://badge.fury.io/pg/pgpyml.svg)](https://badge.fury.io/pg/pgpyml)
+
 # Install
 
 This extension uses the plpython3u, so make sure this extension is installed and created:
