@@ -8,9 +8,9 @@
     ],
     "license": "postgresql",
     "provides": {
-       "pair": {
+       "pgpyml": {
           "abstract": "Use your Python machine learning models inside Postgres.",
-          "file": "sql/pgpyml.sql",
+          "file": "sql/pgpyml--0.1.0.sql",
           "docfile": "README.md",
           "version": "0.1.0"
        }
