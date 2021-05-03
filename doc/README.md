@@ -75,3 +75,24 @@ CREATE EXTENSION pgpyml;
 Now you are ready to use your machine learning model inside your database.
 
 
+# Using the Vagrant Machine
+
+The `pgpyml` repository has a [Vagrantfile](https://github.com/Minoro/pgpyml/blob/main/vagrant/Vagrantfile) that you can use to test this extension, the repository also include an example of how you can train and save a model. The example use the [UCI Iris Dataset](https://archive.ics.uci.edu/ml/datasets/Iris/), with are also included in the repository.
+
+To use the vagrant machine you can navigate to the `vagrant` folder and run:
+```
+vagrant up	# Initiate the machine
+vagrant ssh # Acess the machine
+
+# Change the postgres user password
+sudo passwd postgres
+
+# Login as postgres user
+su - postgres
+
+# Change the database user 'postgres' password to access Postgresql with md5 password
+psql
+ALTER USER postgres WITH PASSWORD 'new_password';
+```
+
+After that you will be able to connect to Postgresql on host `http://localhost:5555` through your host machine.
