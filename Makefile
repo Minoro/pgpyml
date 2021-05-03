@@ -14,8 +14,9 @@ sql/$(EXTENSION)--$(EXTVERSION).sql: $(sort $(wildcard sql/prediction/*.sql))
 	cat $^ > $@
 
 
-DATA = $(wildcard sql/*--*.sql) sql/$(EXTENSION)--$(EXTVERSION).sql
+DATA = sql/$(EXTENSION)--$(EXTVERSION).sql
 EXTRA_CLEAN = sql/$(EXTENSION)--$(EXTVERSION).sql
+
 endif
 
 PGXS := $(shell $(PG_CONFIG) --pgxs)
