@@ -52,3 +52,14 @@ else:
 prediction = clf.predict(input_values)
 return prediction
 $$ LANGUAGE plpython3u;
+
+/**
+* Use the model to predict data already stored on the table
+*/
+CREATE OR REPLACE FUNCTION predict_table_row(model_path text, table_name text, columns_name text[], id int) RETURNS TEXT AS
+$$
+features = ','.join([plpy.quote_ident(c_name) + '::real' for c_name in columns_name])
+selected_values = plpy.execute('SELECT * FROM predict(%s, (SELECT ARRAY[[%s]] FROM %s WHERE id = %d))' % (plpy.quote_literal(model_path), features, plpy.quote_ident(table_name), id), 1)
+
+return selected_values[0]['predict'][0]
+$$ LANGUAGE plpython3u;
