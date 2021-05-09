@@ -199,7 +199,7 @@ predict_table_row(
 SELECT * FROM predict_table_row(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', -- The trained model
 	'iris', -- Table with the data
-	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as feature
+	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as features
 	1 -- The ID of your data
 );
 ```
@@ -218,7 +218,7 @@ classification_trigger(
 	column_where_the_prediction_will_be_saved text, -- Column name to save the result
 	column_name_1 text, -- Feature 1
 	column_name_2 text, -- Feature 2
-	..., -- more feature
+	..., -- more features
     column_name_n text, -- Feature n
 
 ) RETURNS trigger;
@@ -261,7 +261,7 @@ trigger_abort_if_prediction_is(
 	prediction_value_to_avoid mixed, -- Value to abort the transaction
 	column_name_1 text, -- Feature 1
 	column_name_2 text, -- Feature 2
-	..., -- more feature
+	..., -- more features
     column_name_n text, -- Feature n
 
 ) RETURNS trigger;
