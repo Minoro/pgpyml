@@ -2,6 +2,8 @@
 
 This repository contains an Postgres extension that allows you to run your machine learning algorithms written in python and invoke them on Postgres. This way you can write your script in the way you are used to, and apply it right on your data. You can train and save your `sklearn` models and call then with the data stored on Postgres.
 
+You can read more in the [docs](https://github.com/Minoro/pgpyml/tree/main/doc).
+
 [![PGXN version](https://badge.fury.io/pg/pgpyml.svg)](https://badge.fury.io/pg/pgpyml)
 
 # Install
@@ -63,7 +65,6 @@ You can use the `predict` function to apply the trained model on your stored dat
 ```sql
 -- Notice that the features are passed as a nested array
 SELECT * FROM predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
-
 -- Output: {Iris-setosa} (or any other class your model predict)
 
 -- You can pass many features at once

@@ -30,7 +30,7 @@ CREATE TABLE wine (
 	nonflavanoid FLOAT,
 	proanthocyanins FLOAT,
 	color FLOAT,
-	huue FLOAT,
+	hue FLOAT,
 	od280 FLOAT,
 	proline float
 );
@@ -48,7 +48,7 @@ COPY wine(
 	nonflavanoid,
 	proanthocyanins,
 	color,
-	huue,
+	hue,
 	od280,
 	proline
 )
