@@ -85,24 +85,3 @@ if model_key in GD:
     del GD[model_key]
 
 $$ LANGUAGE plpython3u;
-
-
-/**
-* Save the model to the disk. The user 'postgres' must own the directory where the file are being stored.
-* The first argument is the representations, in bytes, of the model.
-* The second argument is the path where you want to store the model. It will use joblib to store the model.
-*/
-CREATE OR REPLACE FUNCTION save_model(model_buffer bytea, model_path text) RETURNS VOID SECURITY DEFINER AS
-$$
-
-import pickle
-from joblib import dump
-
-model = pickle.loads(model_buffer)
-
-if not model_path.endswith('.joblib'):
-    plpy.error('The model_path must hava a .joblib extension')
-    return None
-	
-dump(model, model_path)
-$$ LANGUAGE plpython3u;

@@ -11,7 +11,7 @@ If you are using the `predict` function or the classification triggers you don't
 Although you don't need to load the model manually, you can use the `load_model` function to load (or pre-load) a specific model to the memory. You just need to call this function with passing the model path as argument:
 
 ```sql
-SELECT load_model('home/vagrant/examples/iris/models/iris_decision_tree.joblib');
+SELECT load_model('/home/vagrant/examples/iris/models/iris_decision_tree.joblib');
 ```
 
 The `load_model` signature is:
@@ -47,7 +47,7 @@ TABLE  (
 If you want to check if a specific model is loaded in your memory you can use the `is_model_loaded` function to check for a specific model:
 
 ```sql
-SELECT is_model_loaded('home/vagrant/examples/iris/models/iris_decision_tree.joblib');
+SELECT is_model_loaded('/home/vagrant/examples/iris/models/iris_decision_tree.joblib');
 -- Returns True if the model is already loaded in the memory
 ```
 

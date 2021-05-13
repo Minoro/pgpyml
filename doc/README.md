@@ -1,11 +1,33 @@
 # PGPYML
 
-Pgpyml is an extension that allows you to use your models written in Python inside PostgreSQL. You can make prediction directly on the data being entered at your base, you can also create triggers to avoid insertions based on the predictions.
-
 Python is a popular language to develop machine learning solutions. You may use this language to do some exploratory data analysis and write a model to do predictions over new data to your users. When you are satisfied with the results produced by your model you will deploy it, but this task can be time-consuming. With `pgpyml` you can easly use your model as an in-database solution and take the [advantages of this approach](https://blogs.oracle.com/bigdata/post/why-you-should-use-your-database-for-machine-learning).
 
+Pgpyml is an extension that allows you to use your models written in Python inside PostgreSQL. You can make predictions directly on the data being inserted at your base, you can also create triggers to avoid insertions based on the predictions.
 
 This extension is under development, designed to be compatible with `sklearn` and is not ready to be used in the production environment.
+
+# Table of Contents
+
+- [PGPYML](#pgpyml)
+- [Table of Contents](#table-of-contents)
+- [Instalation](#instalation)
+	- [Prerequisites](#prerequisites)
+	- [Install with Git](#install-with-git)
+	- [Install with PGNXClient](#install-with-pgnxclient)
+	- [Creating the Extension](#creating-the-extension)
+- [Using the Vagrant Machine](#using-the-vagrant-machine)
+- [How to use](#how-to-use)
+	- [Predict](#predict)
+		- [Example](#example)
+	- [Predicting stored data](#predicting-stored-data)
+		- [Example](#example-1)
+	- [Predicting on new data](#predicting-on-new-data)
+		- [Example](#example-2)
+	- [Aborting insertions based on the predictions](#aborting-insertions-based-on-the-predictions)
+		- [Example](#example-3)
+	- [Allowing insertions based on predictions](#allowing-insertions-based-on-predictions)
+		- [Example](#example-4)
+	- [Predicting and inserting or aborting insertions](#predicting-and-inserting-or-aborting-insertions)
 
 # Instalation
 
@@ -175,7 +197,7 @@ SELECT * FROM predict(
 -- Output: {Iris-setosa,Iris-virginica}
 ```
 
-There are also the function `predict_int` and `predict_real` that will cast the output to `INT` and `REAL` respectively.
+There are also the function `predict_int` and `predict_real` that will cast the output to `INT` and `REAL` respectively. When you do a prediction the model will be loaded to the memory. If can also load it manually, read the [Loading the Model](io/README.md) section
 
 
 ## Predicting stored data

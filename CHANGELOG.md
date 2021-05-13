@@ -1,3 +1,8 @@
+# [0.2.0] - Loading models
+- Load the model manually
+- Check the loaded models
+- Unload the model
+
 # [0.1.0] - Initial release
 - Load the python `sklearn` model
 - Use the model to do predictions
