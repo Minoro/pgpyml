@@ -1,7 +1,7 @@
 EXTENSION = pgpyml
 EXTVERSION = $(shell grep default_version $(EXTENSION).control | \
                sed -e "s/default_version[[:space:]]*=[[:space:]]*'\([^']*\)'/\1/")
-               
+
 DATA         = $(filter-out $(wildcard sql/*--*.sql),$(wildcard sql/prediction*.sql))
 
 DOCS         = $(wildcard doc/*.md)
@@ -23,3 +23,6 @@ endif
 
 PGXS := $(shell $(PG_CONFIG) --pgxs)
 include $(PGXS)
+
+dist:
+	git archive --format zip --prefix=$(EXTENSION)-$(EXTVERSION)/ -o $(EXTENSION)-$(EXTVERSION).zip HEAD
