@@ -2,7 +2,7 @@
 
 This repository contains an Postgres extension that allows you to run your machine learning algorithms written in python and invoke them on Postgres. This way you can write your script in the way you are used to, and apply it right on your data. You can train and save your `sklearn` models and call then with the data stored on Postgres.
 
-You can read more in the [docs](https://github.com/Minoro/pgpyml/tree/main/doc).
+You can read more in the [docs](https://minoro.github.io/pgpyml/).
 
 [![PGXN version](https://badge.fury.io/pg/pgpyml.svg)](https://badge.fury.io/pg/pgpyml)
 
