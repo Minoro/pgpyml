@@ -182,6 +182,7 @@ predict(
 ### Example
 
 ```sql
+{% raw  %}
 -- Notice that the features are passed as a nested array
 SELECT * FROM predict(
     '/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
@@ -195,6 +196,7 @@ SELECT * FROM predict(
     '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}'
 );
 -- Output: {Iris-setosa,Iris-virginica}
+{% endraw %}
 ```
 
 There are also the function `predict_int` and `predict_real` that will cast the output to `INT` and `REAL` respectively. When you do a prediction the model will be loaded to the memory. If can also load it manually, read the [Loading the Model](io/README.md) section
@@ -218,12 +220,14 @@ predict_table_row(
 ### Example
 
 ```sql
+{% raw %}
 SELECT * FROM predict_table_row(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', -- The trained model
 	'iris', -- Table with the data
 	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as features
 	1 -- The ID of your data
 );
+{% endraw %}
 ```
 
 ## Predicting on new data
