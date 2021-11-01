@@ -48,10 +48,24 @@ You will need to install the python extension to PostgreSQL. You can do this wit
 apt -y install postgresql-plpython3-<version>
 ```
 
-Replace the `<version>` in the command with the Postgres version that you are using, for example, if you want to install the python extension to Postgres 13 use:
+Replace the `<version>` in the command with the Postgres version that you are using, for example, if you want to install the python extension to Postgres 14 use:
 ```
-apt -y install postgresql-plpython3-13
+apt -y install postgresql-plpython3-14
 ```
+
+## Install with PGNXClient
+
+Alternatively you can install the extension using the `pgnxclient`, you will need to install it if you don't already have it:
+
+```
+apt install pgxnclient
+```
+
+And then you can install the `pgpyml` extension with:
+```
+pgxn install pgpyml
+```
+
 
 ## Install with Git
 
@@ -68,19 +82,6 @@ make clean
 ```
 
 This should install the extension and make it available to be used in the Postgres.
-
-## Install with PGNXClient
-
-Alternatively you can install the extension using the `pgnxclient`, you will need to install it if you don't already have it:
-
-```
-apt install pgxnclient
-```
-
-And then you can install the `pgpyml` extension with:
-```
-pgxn install pgpyml
-```
 
 ## Creating the Extension
 
@@ -105,16 +106,6 @@ To use the vagrant machine you can navigate to the `vagrant` folder and run:
 ```
 vagrant up	# Initiate the machine
 vagrant ssh # Acess the machine
-
-# Change the postgres user password
-sudo passwd postgres
-
-# Login as postgres user
-su - postgres
-
-# Change the database user 'postgres' password to access Postgresql with md5 password
-psql
-ALTER USER postgres WITH PASSWORD 'new_password';
 ```
 
 After that you will be able to connect to Postgresql on host `http://localhost:5555` through your host machine.
