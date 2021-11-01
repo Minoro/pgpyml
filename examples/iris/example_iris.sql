@@ -2,6 +2,7 @@
 -- CREATE DATABASE machine_learning;
 
 -- Create the extesion
+-- CREATE EXTENSION plpython3u;
 -- CREATE EXTENSION pgpyml;
 
 -- Create the basic table
