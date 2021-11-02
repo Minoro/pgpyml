@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An in-database machine learning solution, that allows you to use your models written in Python inside Postgresql.">
+    <title>PGPYML - In-database machine learning with PostgreSQL</title>
+    <link rel="canonical" href="https://minoro.github.io/pgpyml/">
+    <meta property="og:url" content="https://minoro.github.io/pgpyml/">
+    <meta property="og:site_name" content="pgpyml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="./resources/style.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+</head>
+<body class="home">
+    <header class="page-header gradient-bg">
+        <div class="content">
+            <h1 class="title title--main">PGPYML</h1>
+            <p class="description">An in-database machine learning solution, that allows you to use your models written in Python inside Postgresql</p>
+            <a class="button" href="https://github.com/Minoro/pgpyml">View on GitHub</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="section section--diagonal white-bg">
+            <div class="content">
+                <div>
+                    <h2 class="title">Train your models the way you are used to</h2>
+                    <p class="description">Python is widely used in the machine learning field. Use it to train your model as you are used to. You don't need to learn a whole new language to use pgpyml.</p>
+                </div>
+                <div class="code-example">
+                    <pre class="input">
+                        <code class="language-python">from sklearn.tree import DecisionTreeClassifier
+from joblib import dump
+    
+# some code to load your data...
+    
+# create the model
+model = DecisionTreeClassifier()
+    
+# train your model
+model.fit(X_train, y_train)
+    
+# some code to evaluate your model...
+    
+# Save the trained model
+dump(model, '~/models/my_model.joblib')</code>
+                    </pre>
+                </div>
+            </div>
+        </section>
+    
+        <section class="section section--diagonal gradient-bg">
+            <div class="content">
+                <div>
+                    <h2 class="title">Make prediction in your database</h2>
+                    <p class="description">Use your machine learning models inside your database. Train your models as your are used to and deploy it directly on PostgreSQL, where your data is stored.</p>
+                </div>
+                <div class="code-example">
+                    <pre class="input">
+                        <code class="code language-sql">SELECT * FROM predict(
+    '~/models/my_model.joblib', 
+    '{{5.2,3.5,1.5,0.2}}'
+);
+
+SELECT * FROM predict_table_row(
+    '~/models/my_model.joblib', 
+    'iris',
+    '{"sepal_length", "sepal_width", 
+    "petal_length", "petal_width"}', 
+    (SELECT MAX(id) FROM iris)
+);
+    </code></pre>
+                </div>
+            </div>
+        </section>
+    
+        <section class="section section--diagonal white-bg">
+            <div class="content">
+                <div>
+                    <h2 class="title">Classify new data</h2>
+                    <p class="description">Use your models to populate columns or avoid undesired insertions right on PostgreSQL. Use triggers to pass new data through your model.</p>
+                </div>
+                <div class="code-example">
+                    <pre class="input">
+                        <code class="code language-sql">CREATE TRIGGER classify_iris
+BEFORE INSERT OR UPDATE ON "iris"
+FOR EACH ROW 
+EXECUTE PROCEDURE classification_trigger(
+    '~/models/my_model.joblib', -- Model path
+    'class', -- Column name to save the result
+    'sepal_length', -- Feature 1
+    'sepal_width', -- Feature 2
+    'petal_length', -- Feature 3
+    'petal_width'-- Feature 4
+);
+                            </code>
+                    </pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <div class="content">
+            <p class="description"><a href="https://github.com/Minoro/pgpyml">pgpyml</a> is maintained by <a href="https://github.com/Minoro">Minoro</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/sql.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
