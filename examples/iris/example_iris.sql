@@ -2,6 +2,7 @@
 -- CREATE DATABASE machine_learning;
 
 -- Create the extesion
+-- CREATE EXTENSION plpython3u;
 -- CREATE EXTENSION pgpyml;
 
 -- Create the basic table
@@ -44,6 +45,10 @@ EXECUTE PROCEDURE classification_trigger(
 
 
 -- If you want to avoid the insertion of a specific class you can use the following trigger
+
+-- Drop trigger if it exists
+-- DROP TRIGGER IF EXISTS abor_if_iris_setosa ON iris;
+
 CREATE TRIGGER abor_if_iris_setosa
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 

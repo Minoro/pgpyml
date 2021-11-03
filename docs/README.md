@@ -48,10 +48,24 @@ You will need to install the python extension to PostgreSQL. You can do this wit
 apt -y install postgresql-plpython3-<version>
 ```
 
-Replace the `<version>` in the command with the Postgres version that you are using, for example, if you want to install the python extension to Postgres 13 use:
+Replace the `<version>` in the command with the Postgres version that you are using, for example, if you want to install the python extension to Postgres 14 use:
 ```
-apt -y install postgresql-plpython3-13
+apt -y install postgresql-plpython3-14
 ```
+
+## Install with PGNXClient
+
+Alternatively you can install the extension using the `pgnxclient`, you will need to install it if you don't already have it:
+
+```
+apt install pgxnclient
+```
+
+And then you can install the `pgpyml` extension with:
+```
+pgxn install pgpyml
+```
+
 
 ## Install with Git
 
@@ -68,19 +82,6 @@ make clean
 ```
 
 This should install the extension and make it available to be used in the Postgres.
-
-## Install with PGNXClient
-
-Alternatively you can install the extension using the `pgnxclient`, you will need to install it if you don't already have it:
-
-```
-apt install pgxnclient
-```
-
-And then you can install the `pgpyml` extension with:
-```
-pgxn install pgpyml
-```
 
 ## Creating the Extension
 
@@ -105,16 +106,6 @@ To use the vagrant machine you can navigate to the `vagrant` folder and run:
 ```
 vagrant up	# Initiate the machine
 vagrant ssh # Acess the machine
-
-# Change the postgres user password
-sudo passwd postgres
-
-# Login as postgres user
-su - postgres
-
-# Change the database user 'postgres' password to access Postgresql with md5 password
-psql
-ALTER USER postgres WITH PASSWORD 'new_password';
 ```
 
 After that you will be able to connect to Postgresql on host `http://localhost:5555` through your host machine.
@@ -123,7 +114,7 @@ Although it is not necessary to use the vagrant file from the extension reposito
 
 # How to use
 
-We will use the [UCI Iris Dataset](https://archive.ics.uci.edu/ml/datasets/Iris/) as example. We will split the data and use [70% of it as training samples](https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_70.data) and [30% to simulate new data](https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_30.data). You should keep in mind that you this splitting is not the division commonly done in the training process, to test your model over unseen data, the [iris_70]((https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_70.data)) represents the data you have to train your model, so you should splitting it to train and test your model, while the [iris_30](https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_30.data) we will use to simulate new data beeing inserted on the database. Feel free to change this split ratio as you want.
+We will use the [UCI Iris Dataset](https://archive.ics.uci.edu/ml/datasets/Iris/) as example. We will split the data and use [70% of it as training samples](https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_70.data) and [30% to simulate new data](https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_30.data). You should keep in mind that in this example the [iris_70]((https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_70.data)) represents the data you have to train your model, so you should splitting it to train and test your model, while the [iris_30](https://github.com/Minoro/pgpyml/blob/main/examples/iris/dataset/iris_30.data) we will be used to simulate new data beeing inserted on the database. Feel free to change this split ratio as you want.
 
 You can train your python model with sklean and [save it with joblib](https://scikit-learn.org/stable/modules/model_persistence.html). You can use the [repository script](https://github.com/Minoro/pgpyml/blob/main/examples/iris/models/train_iris_decision_tree.py) as example, but the core concept is:
 
@@ -182,6 +173,7 @@ predict(
 ### Example
 
 ```sql
+{% raw  %}
 -- Notice that the features are passed as a nested array
 SELECT * FROM predict(
     '/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
@@ -195,6 +187,7 @@ SELECT * FROM predict(
     '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}'
 );
 -- Output: {Iris-setosa,Iris-virginica}
+{% endraw %}
 ```
 
 There are also the function `predict_int` and `predict_real` that will cast the output to `INT` and `REAL` respectively. When you do a prediction the model will be loaded to the memory. If can also load it manually, read the [Loading the Model](io/README.md) section
@@ -218,12 +211,14 @@ predict_table_row(
 ### Example
 
 ```sql
+{% raw %}
 SELECT * FROM predict_table_row(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', -- The trained model
 	'iris', -- Table with the data
 	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as features
 	1 -- The ID of your data
 );
+{% endraw %}
 ```
 
 ## Predicting on new data
