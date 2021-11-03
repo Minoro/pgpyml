@@ -299,3 +299,6 @@ cython_debug/
 !.vscode/*.code-snippets
 
 # End of https://www.toptal.com/developers/gitignore/api/python,vagrant,node,visualstudiocode
+
+*.min.css
+*.min.js
