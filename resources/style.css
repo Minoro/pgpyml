@@ -15,7 +15,7 @@
 }
 
 html { 
-    font-size: 62.5%; 
+    font-size: 52.5%; 
 } 
 
 body { 
@@ -35,9 +35,8 @@ body {
 }
 
 .page-header {
-    color: var(--color-white);
-    height: 60vh;
-    
+    height: 40vh;
+    min-height: 30rem;
 }
 
 .button {
@@ -95,14 +94,12 @@ body {
     line-height: 1.2;
     margin-bottom: 1.5rem;
 }
-
+/* 
 .section {
     min-height: 50vh;
-}
+} */
 
 .section .content {
-    /* display: flex;
-    flex-direction: column; */
     display: grid;
     grid-template-columns: 1fr;
     gap: 4rem;
@@ -126,16 +123,29 @@ code {
     border-radius: 0.4rem;
 }
 
+
+
 .page-footer
 {
     border-top: 1px solid #cecece;
     text-align: center;
 }
 
+@media only screen and (min-width: 576px) { 
+    html {
+        font-size: 62.5%; 
+    }
+
+    .code-example {
+        overflow-x: inherit;
+    }
+
+}
+
 @media only screen and (min-width: 992px) {
     .section--diagonal {
         clip-path: polygon(0px 14%, 100% 0px, 100% 100%, 0px 100%);
-        padding: 10rem 0;
+        padding: 10rem 0 0;
         position: relative;
         top: -10rem;
     }
