@@ -36,7 +36,8 @@ body {
 
 .page-header {
     height: 40vh;
-    min-height: 30rem;
+    min-height: 35rem;
+    max-height: 40rem;
 }
 
 .button {
@@ -77,6 +78,7 @@ body {
 
 .content {
     width: 80%;
+    max-width: 1330px;
     padding: 2rem;
     margin: 0 auto;
 }
