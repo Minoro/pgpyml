@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An in-database machine learning solution, that allows you to use your models written in Python inside Postgresql.">
+    <title>Get Started - PGPYML</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="../resources/pages.css">
+    <link rel="stylesheet" href="../resources/navigation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+</head>
+<body class="get-started">
+    <header class="page-header page-header-menu">
+        <nav class="main-menu  gradient-bg">
+            <ul class="container">
+                <li><a class="menu-link" href="https://minoro.github.io/pgpyml/">PGPYML</a></li>
+                <li><a class="menu-link" href="https://github.com/Minoro/pgpyml">View on GitHub</a></li>
+                <li><a class="menu-link" href="https://pgxn.org/dist/pgpyml">View on PGXN</a></li>
+                <li><a class="menu-link" href="https://minoro.github.io/pgpyml/documentation">Documentation</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    
+    <main class="main-content">
+        <aside class="side-menu">
+            <nav class="container">
+                <ul>
+                    <li>
+                        <a class="menu-link" href="#install">Install</a>
+                        <ul class="sub-menu">
+                            <li><a class="menu-link" href="#prerequisites">Prerequisites</a></li>
+                            <li><a class="menu-link" href="#install-with-pgnxclient">Install with PGNXClient</a></li>
+                            <li><a class="menu-link" href="#install-with-git">Install with Git</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="menu-link" href="#vagrant">Vagrant</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="page-content">
+            <section id="install" class="section">
+                <div class="container">
+                    <div >
+                        <h1 class="title">Instalation</h1>
+                        <p>This section will instruct you how to install the <strong>pgpyml</strong> extension. You must follow the <a href="#prerequisites">Prerequisites</a> section and choose the <a href="#install-with-pgnxclient">pgxnclient instructions</a> instructions or the <a href="#install-with-git">git installation</a>. Once you the installation is done you can <a href="#creating-the-extension">create the extension</a> on you database.</p>
+                        <p>Alternatively you can use the <a href="#vagrant">Vagrant machine</a> to test it.</p>
+                    </div>
+
+                    <div class="mt" id="prerequisites">   
+                        <h2 class="sub-title">Prerequisites</h2>
+                        <p>First of all, you will need to install the python libraries that are used to write and run your machine learning models:</p>
+                        <pre><code class="language-shell">pip3 install numpy scikit-learn pandas</code></pre>
+                        <p>This command you install the <span class="emph">numpy</span>, <span class="emph">sklearn</span> and <span class="emph">pandas</span> libraries. The <span class="emph">pgpyml</span> extension expects that you use <span class="emph">sklearn</span> to build your models.</p>
+                        
+                        <p>You will need to install the python extension to PostgreSQL. You can do this with the command:</p>
+                        <pre><code class="language-shell"># Replace the &lt;version&gt; with your PostgreSQL version
+apt -y install postgresql-plpython3-&lt;version&gt;</code></pre>
+                        <p>Replace the <span class="emphasis">&lt;version&gt;</span> in the command with the Postgres version that you are using, for example, if you want to install the python extension to Postgres 14 use:</p>
+                        <pre><code class="language-shell">apt -y install postgresql-plpython3-14</code></pre>
+                    </div>
+                    
+                    <div class="mt" id="install-with-pgnxclient">
+                        <h2 class="sub-title">Install with PGNXClient</h2>
+                        <p>You can install the extension using the <strong>pgnxclient</strong>, you will need to install it if you don't already have it:</p>
+                        <pre><code class="language-shell">apt install pgxnclient</code></pre>
+                        <p>And then you can install the <span class="emph">pgpyml</span> extension with:</p>
+                        <pre><code class="language-shell">pgxn install pgpyml</code></pre>
+                    </div>
+
+                    <div class="mt" id="install-with-git">
+                        <h2 class="sub-title">Install with Git</h2>
+                        <p>You can install the <span class="emph">pgpyml</span> with git, cloning the repository and running the instalation script. To do this, first clone the extension's repository:</p>
+
+                        <pre><code class="language-shell">git clone -b v0.2.0 https://github.com/Minoro/pgpyml.git</code></pre>
+
+                        <p>Change the <span class="emph">v0.2.0</span> to the <a href="https://github.com/Minoro/pgpyml/tags">desired version</a>. And inside the downloaded folder run the make file:</p>
+
+                        <pre><code class="language-shell">make install 
+make clean</code></pre>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="vagrant">
+                <div class="container">
+                    <h1 class="title">Using the Vagrant Machine</h1>
+                    <p>The <strong>pgpyml</strong> repository has a Vagrantfile that you can use to test this extension, the repository also include an example of how you can train and save a model. The example use the UCI Iris Dataset, with are also included in the repository.</p> 
+                    <p>To use the vagrant machine you can navigate to the vagrant folder and run:</p>
+    
+                    <pre class="language-shell"><code>vagrant up    # Initiate the machine
+vagrant ssh   # Acess the machine</code></pre>
+                    
+                    <p>After that you will be able to connect to Postgresql on host <a href="http://localhost:5555">http://localhost:5555</a> through your host machine.</p>
+                    <p>Although it is not necessary to use the vagrant file from the extension repository, the examples will be displayed using the paths of the virtual machine.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <div class="content">
+            <p class="description"><a href="https://github.com/Minoro/pgpyml">pgpyml</a> is maintained by <a href="https://github.com/Minoro">Minoro</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/sql.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

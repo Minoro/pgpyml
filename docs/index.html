@@ -21,6 +21,7 @@
             <h1 class="title title--main">PGPYML</h1>
             <p class="description">An in-database machine learning solution, that allows you to use your models written in Python inside Postgresql</p>
             <a class="button" href="https://github.com/Minoro/pgpyml">View on GitHub</a>
+            <a class="button button--inverted" href="documentation/">Get Started</a>
         </div>
     </header>
 
@@ -29,11 +30,14 @@
             <div class="content">
                 <div>
                     <h2 class="title">Train your models the way you are used to</h2>
-                    <p class="description">Python is widely used in the machine learning field. Use it to train your model as you are used to. You don't need to learn a whole new language to use pgpyml.</p>
+                    <p class="description">Python is widely used in the machine learning field. Use it to train your model as you are used to and use it right on your database with pgpyml.</p>
+                    <a class="button button--inverted" href="documentation/">Get Started</a>
                 </div>
                 <div class="code-example">
                     <pre class="input">
-                        <code class="language-python">from sklearn.tree import DecisionTreeClassifier
+                        <code class="language-python"># Your traning script in Python
+
+from sklearn.tree import DecisionTreeClassifier
 from joblib import dump
     
 # some code to load your data...
@@ -58,20 +62,21 @@ dump(model, '~/models/my_model.joblib')</code>
                 <div>
                     <h2 class="title">Make prediction in your database</h2>
                     <p class="description">Use your machine learning models inside your database. Train your models as your are used to and deploy it directly on PostgreSQL, where your data is stored.</p>
+                    <a class="button" href="documentation/">Get Started</a>
                 </div>
                 <div class="code-example">
                     <pre class="input">
                         <code class="code language-sql">SELECT * FROM predict(
-    '~/models/my_model.joblib', 
-    '{{5.2,3.5,1.5,0.2}}'
+    '~/models/my_model.joblib', -- Your model
+    '{{5.2,3.5,1.5,0.2}}' -- The features
 );
 
 SELECT * FROM predict_table_row(
-    '~/models/my_model.joblib', 
-    'iris',
-    '{"sepal_length", "sepal_width", 
-    "petal_length", "petal_width"}', 
-    (SELECT MAX(id) FROM iris)
+    '~/models/my_model.joblib', -- Your Model
+    'iris', -- Table
+    '{"sepal_length", "sepal_width",  
+    "petal_length", "petal_width"}', -- Columns names
+    (SELECT MAX(id) FROM iris) -- ID to predict
 );
     </code></pre>
                 </div>
@@ -82,7 +87,8 @@ SELECT * FROM predict_table_row(
             <div class="content">
                 <div>
                     <h2 class="title">Classify new data</h2>
-                    <p class="description">Use your models to populate columns or avoid undesired insertions right on PostgreSQL. Use triggers to pass new data through your model.</p>
+                    <p class="description">Use your models to populate columns or avoid undesired insertions right on PostgreSQL. Create triggers to pass new data through your model.</p>
+                    <a class="button button--inverted" href="documentation/">Learn More</a>
                 </div>
                 <div class="code-example">
                     <pre class="input">

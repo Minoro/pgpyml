@@ -1,0 +1,73 @@
+:root {
+    --font-family: 'Poppins';
+    --color-1: #CC3363;
+    --color-2: #968190;
+    --color-3: #b91d73;
+    --color-4: #1B1B3A;
+    --color-5: #34403A;
+    --color-white: #fff;
+}
+
+*, *::before, *::after
+{
+    margin: 0;
+    padding: 0;
+}
+
+html { 
+    font-size: 52.5%; 
+} 
+
+body { 
+    font-size: 1.6rem; 
+    font-family: sans-serif;
+    font-family: var(--font-family), sans-serif;
+}
+
+
+.container {
+    width: 80%;
+    max-width: 1330px;
+    padding: 2rem;
+    margin: 0 auto;
+    background-color: #fff;
+}
+
+
+.page-header-menu + main {
+    padding-top: 7rem;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+}
+
+.page-content h1 {
+    font-size: 3.8rem;
+    margin-bottom: 1rem;
+
+}
+
+.page-content .sub-title {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+}
+
+.page-content p {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.page-content pre {
+    margin-bottom: 1rem;
+}
+
+
+.page-content .mt {
+    margin-top: 4rem;
+}
+
+.emph {
+    font-style: italic;
+}

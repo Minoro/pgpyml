@@ -116,10 +116,6 @@ body {
     margin-top: -1rem;
 }
 
-.code-example {
-    overflow-x: scroll;
-}
-
 code {
     font-size: 1.4rem;
     border-radius: 0.4rem;
@@ -131,6 +127,12 @@ code {
 {
     border-top: 1px solid #cecece;
     text-align: center;
+}
+
+@media only screen and (max-width: 575px) { 
+    .code-example {
+        overflow-x: scroll;
+    }    
 }
 
 @media only screen and (min-width: 576px) { 

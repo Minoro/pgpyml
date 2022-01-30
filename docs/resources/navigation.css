@@ -1,0 +1,96 @@
+.main-menu {
+    background: var(--color-1);
+    color: #fff;
+    border-bottom: 1px solid #ccc;
+    position: fixed;
+    width: 100%;
+}
+
+.main-menu .container {
+    display: flex;
+    justify-content: space-between;
+    background: var(--color-1);
+}
+
+.main-menu > ul > li {
+    list-style: none;
+}
+
+.main-menu .menu-link {
+    font-size: 2rem;
+    color: #fff;
+    text-decoration: none;
+    position: relative;
+    padding: 1rem;
+}
+
+.main-menu .menu-link::before,
+.main-menu .menu-link::after {
+  content: '';
+  height: 14px;
+  width: 14px;
+  position: absolute;
+  transition: all .35s ease;
+  opacity: 0;
+}
+
+
+.main-menu .menu-link:before {
+    content: '';
+    right: 0;
+    top: 0;
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
+    transform: translate(-100%, 50%);
+}
+  
+.main-menu .menu-link:after {
+    content: '';
+    left: 0;
+    bottom: 0;
+    border-bottom: 3px solid #fff;
+    border-left: 3px solid #fff;
+    transform: translate(100%, -50%)
+}
+
+.main-menu .menu-link:hover:before,
+.main-menu .menu-link:hover:after{
+    transform: translate(0,0);
+    opacity: 1;
+}
+
+.side-menu {
+    background: #fff;
+    border-right: 2px solid var(--color-1);
+}
+
+.side-menu > nav {
+    position: sticky;
+    top: 8rem;
+}
+
+.side-menu li {
+    list-style: none;
+    margin-bottom: 1rem;
+}
+
+.side-menu .sub-menu li {
+    margin-bottom: 0.4rem;
+}
+
+.side-menu .menu-link {
+    text-decoration: none;
+    font-size: 2.4rem;
+    color: #000;
+    padding-left: 1rem;
+}
+
+.side-menu .menu-link:hover {
+    border-left: 5px solid var(--color-1);
+}
+
+.side-menu .sub-menu .menu-link {
+    font-size: 1.8rem;
+    padding-left: 2.5rem;
+}
+
