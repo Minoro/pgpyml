@@ -38,6 +38,7 @@
                             <li><a class="menu-link" href="#install-with-git">Install with Git</a></li>
                         </ul>
                     </li>
+                    <li><a class="menu-link" href="#creating-the-extension">Create the Extension</a></li>
                     <li><a class="menu-link" href="#vagrant">Vagrant</a></li>
                 </ul>
             </nav>
@@ -84,6 +85,18 @@ apt -y install postgresql-plpython3-&lt;version&gt;</code></pre>
                         <pre><code class="language-shell">make install 
 make clean</code></pre>
                     </div>
+                </div>
+            </section>
+
+            <section id="creating-the-extension">
+                <div class="container">
+                    <h1 class="title">Create the Extension</h1>
+                    <p>Once you have installed the extension you can create it on your PostgreSQL:</p>
+                    <pre><code class="language-sql">-- Python Language extension
+CREATE EXTENSION plpython3u;
+
+-- This extension
+CREATE EXTENSION pgpyml;</code></pre>
                 </div>
             </section>
             

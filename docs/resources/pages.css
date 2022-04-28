@@ -74,6 +74,15 @@ body {
     font-style: italic;
 }
 
+
+.page-footer
+{
+    border-top: 1px solid #cecece;
+    text-align: center;
+    padding: 2rem 0;
+    font-size: 1.8rem;
+}
+
 @media only screen and (min-width: 992px) {
     .page-header-menu + main {
         padding-top: 7rem;
