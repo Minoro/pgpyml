@@ -12,6 +12,7 @@
 {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 html { 
@@ -26,7 +27,7 @@ body {
 
 
 .container {
-    width: 80%;
+    width: 90%;
     max-width: 1330px;
     padding: 2rem;
     margin: 0 auto;
@@ -35,12 +36,13 @@ body {
 
 
 .page-header-menu + main {
-    padding-top: 7rem;
+    padding-top: 10rem;
 }
 
 .main-content {
-    display: grid;
-    grid-template-columns: 1fr 6fr;
+    /* display: grid;
+    grid-template-columns: 1fr 6fr; */
+    display: flex;
 }
 
 .page-content h1 {
@@ -70,4 +72,11 @@ body {
 
 .emph {
     font-style: italic;
+}
+
+@media only screen and (min-width: 992px) {
+    .page-header-menu + main {
+        padding-top: 7rem;
+    }
+
 }

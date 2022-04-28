@@ -6,8 +6,9 @@
     width: 100%;
 }
 
-.main-menu .container {
+.main-menu ul {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     background: var(--color-1);
 }
@@ -62,11 +63,13 @@
 .side-menu {
     background: #fff;
     border-right: 2px solid var(--color-1);
+    display: none;
 }
 
-.side-menu > nav {
+.side-menu .nav-container {
     position: sticky;
     top: 8rem;
+    width: 250px;
 }
 
 .side-menu li {
@@ -87,6 +90,7 @@
 
 .side-menu .menu-link:hover {
     border-left: 5px solid var(--color-1);
+    font-weight: bold;
 }
 
 .side-menu .sub-menu .menu-link {
@@ -94,3 +98,8 @@
     padding-left: 2.5rem;
 }
 
+@media only screen and (min-width: 992px) {
+    .side-menu {
+        display: block;
+    }
+}
