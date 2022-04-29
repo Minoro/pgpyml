@@ -30,6 +30,7 @@
         <aside class="side-menu">
             <nav class="nav-container">
                 <ul>
+                    <li><a class="menu-link" href="#presentation">PGPYML</a></li>
                     <li>
                         <a class="menu-link" href="#install">Install</a>
                         <ul class="sub-menu">
@@ -45,11 +46,23 @@
         </aside>
 
         <div class="page-content">
+
+            <section id="presentation" class="section">
+                <div class="container">
+                    <div>
+                        <h1 class="title">PGPYML</h1>
+                        <p>Python is a popular programming language to develop machine learning solutions. You may use it to do some exploratory data analysis and write a model to do predictions over new data. When you are satisfied with the results produced by your model you will deploy it, but this task can be time-consuming. With pgpyml you can easily use your model as an in-database solution and take the <a href="https://blogs.oracle.com/bigdata/post/why-you-should-use-your-database-for-machine-learning" target="_blank">advantages of this approach</a>.</p>
+                        <p>Pgpyml is an extension that allows you to use your models written in Python inside PostgreSQL. You can make predictions directly on the data being inserted at your base, you can also create triggers to avoid insertions based on the predictions.</p>
+                        <p>This extension is under development, designed to be compatible with sklearn and is not ready to be used in the production environment.</p>
+                    </div>
+            </section>
+
+
             <section id="install" class="section">
                 <div class="container">
                     <div >
                         <h1 class="title">Instalation</h1>
-                        <p>This section will instruct you how to install the <strong>pgpyml</strong> extension. You must follow the <a href="#prerequisites">Prerequisites</a> section and choose the <a href="#install-with-pgnxclient">pgxnclient instructions</a> instructions or the <a href="#install-with-git">git installation</a>. Once you the installation is done you can <a href="#creating-the-extension">create the extension</a> on you database.</p>
+                        <p>This section will instruct you how to install the <strong>pgpyml</strong> extension. You must follow the <a href="#prerequisites">Prerequisites</a> section and choose the <a href="#install-with-pgnxclient">pgxnclient instructions</a> or the <a href="#install-with-git">git installation</a>. Once the installation is done you can <a href="#creating-the-extension">create the extension</a> on your database.</p>
                         <p>Alternatively you can use the <a href="#vagrant">Vagrant machine</a> to test it.</p>
                     </div>
 
@@ -57,12 +70,12 @@
                         <h2 class="sub-title">Prerequisites</h2>
                         <p>First of all, you will need to install the python libraries that are used to write and run your machine learning models:</p>
                         <pre><code class="language-shell">pip3 install numpy scikit-learn pandas</code></pre>
-                        <p>This command you install the <span class="emph">numpy</span>, <span class="emph">sklearn</span> and <span class="emph">pandas</span> libraries. The <span class="emph">pgpyml</span> extension expects that you use <span class="emph">sklearn</span> to build your models.</p>
+                        <p>This command install the <span class="emph">numpy</span>, <span class="emph">sklearn</span> and <span class="emph">pandas</span> libraries. The <span class="emph">pgpyml</span> extension expects that you use <span class="emph">sklearn</span> to build your models.</p>
                         
-                        <p>You will need to install the python extension to PostgreSQL. You can do this with the command:</p>
+                        <p>You will need to install the Python extension for PostgreSQL. You can do this with the command:</p>
                         <pre><code class="language-shell"># Replace the &lt;version&gt; with your PostgreSQL version
 apt -y install postgresql-plpython3-&lt;version&gt;</code></pre>
-                        <p>Replace the <span class="emphasis">&lt;version&gt;</span> in the command with the Postgres version that you are using, for example, if you want to install the python extension to Postgres 14 use:</p>
+                        <p>Replace the <span class="emphasis">&lt;version&gt;</span> in the command with the Postgres version that you are using, for example, if you want to install the Python extension to Postgres 14 use:</p>
                         <pre><code class="language-shell">apt -y install postgresql-plpython3-14</code></pre>
                     </div>
                     
