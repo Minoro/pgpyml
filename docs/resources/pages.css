@@ -26,8 +26,11 @@ body {
 }
 
 
+code {
+    white-space: break-spaces;
+}
+
 .container {
-    width: 90%;
     max-width: 1330px;
     padding: 2rem;
     margin: 0 auto;
@@ -84,6 +87,10 @@ body {
 }
 
 @media only screen and (min-width: 992px) {
+    .container {
+        width: 90%;
+    }
+
     .page-header-menu + main {
         padding-top: 7rem;
     }

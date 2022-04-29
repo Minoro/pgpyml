@@ -13,6 +13,7 @@
 {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 html { 
@@ -37,7 +38,7 @@ body {
 
 .page-header {
     color: var(--color-white);
-    height: 60vh;
+    height: 70vh;
     max-height: 40rem;
 }
 
@@ -55,6 +56,7 @@ body {
     transition: all 0.4s ease;
     min-width: 14.5rem;
     text-align: center;
+    width: 100%;
 }
 
 .button:hover {
@@ -91,7 +93,6 @@ body {
 
 
 .content {
-    width: 80%;
     padding: 2rem;
     margin: 0 auto;
 }
@@ -145,17 +146,23 @@ code {
     text-align: center;
 }
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 600px) {
+    .button {
+        width: auto;
+    }
+}
+
+@media only screen and (min-width: 900px) {
+    .content {
+        width: 80%;
+    }
+
     .section--diagonal {
         clip-path: polygon(0px 14%, 100% 0px, 100% 100%, 0px 100%);
         padding: 10rem 0;
         position: relative;
         top: -10rem;
-        max-height: 30vh;
-    }
-
-    .page-header .description {
-        max-width: 60%;
+        max-height: 45rem;
     }
 
     .section .content {
@@ -173,5 +180,15 @@ code {
     }
     
 
+}
+
+@media only screen and (min-width: 1200px) {
+    .page-header .description {
+        max-width: 60%;
+    }
+
+    /* .section--diagonal {
+        max-height: 30vh;
+    } */
 }
 
