@@ -6,6 +6,7 @@
     --color-4: #1B1B3A;
     --color-5: #34403A;
     --color-white: #fff;
+    --color-black: #010101;
 }
 
 *, *::before, *::after
@@ -28,6 +29,13 @@ body {
 
 code {
     white-space: break-spaces;
+}
+
+.inline-code {
+    background: #f5f5f5;
+    font-size: 1.6rem;
+    padding: 0px 5px;
+    border-radius: 4px;
 }
 
 .container {
@@ -84,7 +92,18 @@ code {
     text-align: center;
     padding: 2rem 0;
     font-size: 1.8rem;
+    background: var(--color-4);
+    color: var(--color-white);
 }
+
+.page-footer a {
+    color: var(--color-1);
+}
+
+.page-footer a:visited {
+    color: var(--color-3);
+}
+
 
 @media only screen and (min-width: 992px) {
     .container {

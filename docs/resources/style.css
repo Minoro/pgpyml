@@ -144,6 +144,16 @@ code {
 {
     border-top: 1px solid #cecece;
     text-align: center;
+    background: var(--color-4);
+    color: var(--color-white);
+}
+
+.page-footer a {
+    color: var(--color-1);
+}
+
+.page-footer a:visited {
+    color: var(--color-3);
 }
 
 @media only screen and (min-width: 600px) {
