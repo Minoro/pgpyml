@@ -139,7 +139,7 @@ from sklearn import datasets
 from joblib import dump, load
 
 iris = datasets.load_iris()
-X = iris.data[:, :2]  # we only take the first two features.
+X = iris.data
 y = iris.target
 
 model = DecisionTreeClassifier()
@@ -147,7 +147,7 @@ model = DecisionTreeClassifier()
 model.fit(X, y)
 dump(model, './iris_decision_tree.joblib')</code></pre>
 
-                    <p>After running this code you will see an file named <span class="inline-code">iris_decision_tree.joblib</span> in the same folder that you runned the training script. You can read more about persisting your models on <a href="https://scikit-learn.org/stable/modules/model_persistence.html" target="_blank">Sklearn Documentation</a>.</p>
+                    <p>After running this code you will see an file named <span class="inline-code">iris_decision_tree.joblib</span> in the same folder that you runned the training script. This is the model that we will deploy on PostgreSQL. You can read more about persisting your models on <a href="https://scikit-learn.org/stable/modules/model_persistence.html" target="_blank">Sklearn Documentation</a>.</p>
                 </div>
             </section>
         </div>
