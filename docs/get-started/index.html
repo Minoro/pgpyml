@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="An in-database machine learning solution, that allows you to use your models written in Python inside Postgresql.">
+    <meta name="description" content="Instructions to install the pgpyml extension and use machine learning models in PostgresSQL.">
     <meta name="keywords" content="Machine Learning, PostgreSQL, Postgres, Python, Sklearn, Deploy, in-database">
     <meta name="author" content="André Minoro FUsioka">
     <title>Get Started - PGPYML</title>
@@ -44,6 +44,7 @@
                         </ul>
                     </li>
                     <li><a class="menu-link" href="#train-your-model">Train Your Model</a></li>
+                    <li><a class="menu-link" href="#deploy">Deploy</a></li>
                 </ul>
             </nav>
         </aside>
@@ -147,9 +148,24 @@ y = iris.target
 model = DecisionTreeClassifier()
 
 model.fit(X, y)
-dump(model, './iris_decision_tree.joblib')</code></pre>
+dump(model, '/home/vagrant/models/iris_decision_tree.joblib')</code></pre>
 
                     <p>After running this code you will see an file named <span class="inline-code">iris_decision_tree.joblib</span> in the same folder that you runned the training script. This is the model that we will deploy on PostgreSQL. You can read more about persisting your models on <a href="https://scikit-learn.org/stable/modules/model_persistence.html" target="_blank">Sklearn Documentation</a>.</p>
+                </div>
+            </section>
+
+            <section id="deploy">
+                <div class="container">
+                    <h1 class="title">Deploy on PostgresSQL</h1>
+                    <p>Now you have everything you need to deploy your Machine Learning model on PostgresSQL. Run the following command to make a prediction on new data:</p>
+
+                    <pre class="language-sql"><code>SELECT * FROM predict_table_row(
+    '/home/vagrant/models/iris_decision_tree.joblib', -- The trained model
+    'iris', -- Table with the data
+    '{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as feature
+    1 -- The ID of your data
+);</code></pre>
+                    <p>This command will load your model and use it to predict a single row in your database. The first parameters is the model you want to use, the second one is the table in your database where your data is stored, se third parameter is a <strong>array</strong> with the name of the columns that hold the data to use with your model, the final parameter is the <strong>ID</strong> of the data you want to predict.</p>
                 </div>
             </section>
         </div>
