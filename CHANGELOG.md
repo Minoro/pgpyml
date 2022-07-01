@@ -1,3 +1,6 @@
+# [0.3.0] - New Schema
+- Create a new schema when the extension is created
+
 # [0.2.0] - Loading models
 - Load the model manually
 - Check the loaded models
