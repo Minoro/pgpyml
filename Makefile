@@ -12,7 +12,7 @@ PG91         = $(shell $(PG_CONFIG) --version | grep -qE " 8\\.| 9\\.0" && echo 
 ifeq ($(PG91),yes)
 all: sql/$(EXTENSION)--$(EXTVERSION).sql
 
-sql/$(EXTENSION)--$(EXTVERSION).sql: $(sort $(wildcard sql/prediction/*.sql) $(wildcard sql/io/*.sql))
+sql/$(EXTENSION)--$(EXTVERSION).sql: $(sort $(wildcard sql/boostrap/*.sql) $(wildcard sql/prediction/*.sql) $(wildcard sql/io/*.sql))
 	cat $^ > $@
 
 
