@@ -1,44 +1,33 @@
-# pgpyml - Postgres running your python machine learning model
+# PGPYML - Deploy your Machine Learning Models on Postgres
+
+[![PGXN version](https://badge.fury.io/pg/pgpyml.svg)](https://badge.fury.io/pg/pgpyml) [![License](https://img.shields.io/badge/license-PostgreSQL-informational)](https://img.shields.io/badge/license-PostgreSQL-informational) [![Issues](https://img.shields.io/github/issues/Minoro/pgpyml)](https://github.com/Minoro/pgpyml/issues)
+
+
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
 
 This repository contains an Postgres extension that allows you to run your machine learning algorithms written in python and invoke them on Postgres. This way you can write your script in the way you are used to, and apply it right on your data. You can train and save your `sklearn` models and call then with the data stored on Postgres.
 
-You can read more in the [docs](https://minoro.github.io/pgpyml/).
+You can read more in the [Documentation](https://minoro.github.io/pgpyml/).
 
-[![PGXN version](https://badge.fury.io/pg/pgpyml.svg)](https://badge.fury.io/pg/pgpyml)
 
 # Install
 
-This extension uses the plpython3u, so make sure this extension is installed and created:
-```
-apt install postgresql-plpython3-<version>
+You can install the extension using the **pgnxclient**:
 
-# Substitute the <version> with the version of your Postgres, like
-# apt install postgresql-plpython3-14
-
-# Install pip and pgxnclient
-apt install python3-pip pgxnclient
-
-# Install your python libraries
-pip3 install numpy scikit-learn pandas
+```shell
+pgxn install pgpyml
 ```
 
-Then clone this repository and run:
-```
-git clone https://github.com/Minoro/pgpyml.git
-
-cd pgpyml
-
-make install
-```
-
-And finally create the extension on your database:
+And create the extension on your database:
 ```sql
--- Python Language extension
-CREATE EXTENSION plpython3u;
-
+-- Create a new schema (optional)
+CREATE SCHEMA IF NOT EXISTS pgpyml
 -- This extension
-CREATE EXTENSION pgpyml;
+CREATE EXTENSION pgpyml SCHEMA pgpyml CASCADE;
 ```
+
+
+This extension uses the plpython3u, so make sure this extension is installed. You can read more about it on the [documentation](https://minoro.github.io/pgpyml/get-started/#install).
 
 # Save your python sklearn model
 
@@ -88,7 +77,7 @@ CREATE TABLE iris (
 CREATE TRIGGER classify_iris
 BEFORE INSERT OR UPDATE ON "iris"
 FOR EACH ROW 
-EXECUTE PROCEDURE classification_trigger(
+EXECUTE PROCEDURE pgpyml.classification_trigger(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', -- Model path
 	'class', -- Column name to save the result
 	'sepal_length', -- Feature 1
@@ -113,7 +102,7 @@ SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
 Besides that you can also apply your model in the data that are already stored in your database. To do that you can use the `predict_table_row` function. This function expects as the first argument the model you want to use, the second argument is the name of the table where the data is stored, the third argument is an array with the name of the columns that will be used as features by your model, and finally the forth argument is the id of the row you want to classify: 
 
 ```sql
-SELECT * FROM predict_table_row(
+SELECT * FROM pgpyml.predict_table_row(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', -- The trained model
 	'iris', -- Table with the data
 	'{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as feature
@@ -128,7 +117,7 @@ Sometimes you may want to avoid the insertion of some items that belongs to a sp
 CREATE TRIGGER abort_if_iris_setosa
 BEFORE INSERT ON "iris"
 FOR EACH ROW 
-EXECUTE PROCEDURE trigger_abort_if_prediction_is(
+EXECUTE PROCEDURE pgpyml.trigger_abort_if_prediction_is(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
 	'Iris-setosa', -- avoid the insertion of Iris-setosa
 	'sepal_length', 
@@ -158,7 +147,7 @@ In the same way, you may want to avoid insertions unless the row belongs to a sp
 CREATE TRIGGER abort_unless_is_iris_setosa
 BEFORE INSERT ON "iris"
 FOR EACH ROW 
-EXECUTE PROCEDURE trigger_abort_unless_prediction_is(
+EXECUTE PROCEDURE pgpyml.trigger_abort_unless_prediction_is(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
 	'Iris-setosa', -- only accept insertion if the prediction match this value
 	'sepal_length', 
@@ -203,7 +192,7 @@ The `trigger_abort_*` function are designed only to cancel operations, but some 
 CREATE TRIGGER abort_unless_is_iris_setosa
 BEFORE INSERT ON "iris"
 FOR EACH ROW 
-EXECUTE PROCEDURE trigger_classification_or_abort_unless_prediction_is(
+EXECUTE PROCEDURE pgpyml.trigger_classification_or_abort_unless_prediction_is(
 	'/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
 	'class', -- column where the prediction will be stored
 	'Iris-setosa', -- avoid the insertion of iris-setosa
