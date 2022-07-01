@@ -1,7 +1,7 @@
 {
   "name": "pgpyml",
   "version": "0.3.0",
-  "description": "PostgreSQL extension to run machine learning algorithms",
+  "description": "Deploy your python machine learning models in your database",
   "main": "index.js",
   "directories": {
     "doc": "docs",
