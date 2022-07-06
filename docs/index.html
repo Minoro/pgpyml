@@ -1,3 +1,6 @@
+---
+layout: none
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +10,7 @@
     <meta name="description" content="An in-database machine learning solution, that allows you to use your models written in Python inside Postgresql.">
     <meta name="keywords" content="Machine Learning, PostgreSQL, Postgres, Python, Sklearn, Deploy, in-database">
     <meta name="author" content="André Minoro FUsioka">
-    <title>PGPYML - In-database machine learning with PostgreSQL</title>
+    <title>PGPYML - Deploy machine learning models on PostgreSQL</title>
     <link rel="canonical" href="https://minoro.github.io/pgpyml/">
     <meta property="og:url" content="https://minoro.github.io/pgpyml/">
     <meta property="og:site_name" content="pgpyml">
@@ -21,7 +24,7 @@
     <header class="page-header gradient-bg">
         <div class="content">
             <h1 class="title title--main">PGPYML</h1>
-            <p class="description">An in-database Machine Learning solution, that allows you to use your models written in Python inside PostgreSQL</p>
+            <p class="description">An in-database Machine Learning solution, that allows you to deploy your models written in Python inside PostgreSQL</p>
             <a class="button button--hover-dark" href="https://github.com/Minoro/pgpyml">View on GitHub</a>
             <a class="button button--dark" href="get-started/">Get Started</a>
         </div>
@@ -64,7 +67,7 @@ dump(model, '~/models/my_model.joblib')</code>
                 </div>
                 <div class="code-example">
                     <pre class="input">
-                        <code class="code language-sql">SELECT * FROM predict(
+                        <code class="code language-sql">{% raw %}SELECT * FROM predict(
     '~/models/my_model.joblib', 
     '{{5.2,3.5,1.5,0.2}}'
 );
@@ -75,7 +78,7 @@ SELECT * FROM predict_table_row(
     '{"sepal_length", "sepal_width", 
     "petal_length", "petal_width"}', 
     (SELECT MAX(id) FROM iris)
-);
+);{% endraw %}
     </code></pre>
                 </div>
             </div>

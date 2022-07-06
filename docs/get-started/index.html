@@ -1,52 +1,20 @@
+---
+layout: none
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Instructions to install the pgpyml extension and use machine learning models in PostgresSQL.">
-    <meta name="keywords" content="Machine Learning, PostgreSQL, Postgres, Python, Sklearn, Deploy, in-database">
-    <meta name="author" content="André Minoro FUsioka">
-    <title>Get Started - PGPYML</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="../resources/pages.css">
-    <link rel="stylesheet" href="../resources/navigation.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+    {% include head_data.html %}
 </head>
 <body class="get-started">
     <header class="page-header page-header-menu">
-        <nav class="main-menu  gradient-bg">
-            <ul class="container">
-                <li><a class="menu-link" href="https://minoro.github.io/pgpyml/">PGPYML</a></li>
-                <li><a class="menu-link" href="https://github.com/Minoro/pgpyml">View on GitHub</a></li>
-                <li><a class="menu-link" href="https://pgxn.org/dist/pgpyml">View on PGXN</a></li>
-                <li><a class="menu-link" href="https://minoro.github.io/pgpyml/get-started">Documentation</a></li>
-            </ul>
-        </nav>
+        {% include navbar.html %}
     </header>
 
     
     <main class="main-content">
         <aside class="side-menu">
-            <nav class="nav-container">
-                <ul>
-                    <li><a class="menu-link" href="#presentation">PGPYML</a></li>
-                    <li>
-                        <a class="menu-link" href="#install">Install</a>
-                        <ul class="sub-menu">
-                            <li><a class="menu-link" href="#prerequisites">Prerequisites</a></li>
-                            <li><a class="menu-link" href="#install-with-pgnxclient">Install with PGNXClient</a></li>
-                            <li><a class="menu-link" href="#install-with-git">Install with Git</a></li>
-                            <li><a class="menu-link" href="#creating-the-extension">Create the Extension</a></li>
-                            <li><a class="menu-link" href="#vagrant">Vagrant</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="menu-link" href="#train-your-model">Train Your Model</a></li>
-                    <li><a class="menu-link" href="#deploy">Deploy</a></li>
-                </ul>
-            </nav>
+            {% include menu_getstarted.html %}
         </aside>
 
         <div class="page-content">
@@ -173,11 +141,7 @@ dump(model, '/home/vagrant/models/iris_decision_tree.joblib')</code></pre>
         </div>
     </main>
 
-    <footer class="page-footer">
-        <div class="content">
-            <p class="description"><a href="https://github.com/Minoro/pgpyml">pgpyml</a> is maintained by <a href="https://github.com/Minoro">Minoro</a></p>
-        </div>
-    </footer>
+    {% include footer.html %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/sql.min.js"></script>
