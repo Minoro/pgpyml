@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>PGPYML | An in-database Machine Learning solution, that allows you to use your models written in Python inside PostgreSQL.</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="PGPYML" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An in-database Machine Learning solution, that allows you to use your models written in Python inside PostgreSQL." />
+<meta property="og:description" content="An in-database Machine Learning solution, that allows you to use your models written in Python inside PostgreSQL." />
+<link rel="canonical" href="http://localhost:4000/pgpyml/io/" />
+<meta property="og:url" content="http://localhost:4000/pgpyml/io/" />
+<meta property="og:site_name" content="PGPYML" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="PGPYML" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"An in-database Machine Learning solution, that allows you to use your models written in Python inside PostgreSQL.","headline":"PGPYML","url":"http://localhost:4000/pgpyml/io/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/pgpyml/assets/css/style.css?v=15bf7ee5593e340ea64fa1c97ccc25ede4ae67b4">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/pgpyml/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+
+      <h1 id="pgpyml">PGPYML</h1>
+
+<h1 id="loading-the-model">Loading the Model</h1>
+
+<p>The <code class="language-plaintext highlighter-rouge">pgpyml</code> extension will load the model you trained in the memory to be used in a Postgres session. The model will be loaded to the <code class="language-plaintext highlighter-rouge">GD</code> dictionary, the key will be the path to your model prefixed with <code class="language-plaintext highlighter-rouge">model_</code>. That means that if you load the model <code class="language-plaintext highlighter-rouge">/home/vagrant/examples/iris/models/iris_decision_tree.joblib</code> you will be able to access it in your <code class="language-plaintext highlighter-rouge">plpython3u</code> function with:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span> <span class="o">=</span> <span class="n">GD</span><span class="p">[</span><span class="s">'model_/home/vagrant/examples/iris/models/iris_decision_tree.joblib'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>If you are using the <code class="language-plaintext highlighter-rouge">predict</code> function or the classification triggers you don’t need to worry about loading the model by yourself, the <code class="language-plaintext highlighter-rouge">pgpyml</code> extension will load it and store in the <code class="language-plaintext highlighter-rouge">GD</code> dictionary.</p>
+
+<p>Although you don’t need to load the model manually, you can use the <code class="language-plaintext highlighter-rouge">load_model</code> function to load (or pre-load) a specific model to the memory. You just need to call this function with passing the model path as argument:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">load_model</span><span class="p">(</span><span class="s1">'/home/vagrant/examples/iris/models/iris_decision_tree.joblib'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">load_model</code> signature is:</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FUNCTION</span> <span class="n">load_model</span><span class="p">(</span><span class="n">model_path</span> <span class="nb">text</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">BYTEA</span>
+</code></pre></div></div>
+
+<p>When you invoke the function <code class="language-plaintext highlighter-rouge">load_model</code> manually it will replace any model that already is in the memory to the specified path and will returs a <code class="language-plaintext highlighter-rouge">bytea</code> representation of the loaded model.</p>
+
+<p>The model must be a <code class="language-plaintext highlighter-rouge">joblib</code> file. You can refer the <a href="https://scikit-learn.org/stable/modules/model_persistence.html">sklearn model persistence documentation</a> to see more about saving your model. Pay extra attention to the <a href="https://scikit-learn.org/stable/modules/model_persistence.html#security-maintainability-limitations">Security &amp; maintainability limitations</a> section, the information in that section can be applyed to <code class="language-plaintext highlighter-rouge">pgpyml</code>. <strong>Never use an untrusted pickle/joblib file</strong>.</p>
+
+<h1 id="checking-loaded-models">Checking loaded models</h1>
+
+<p>Once you have used one of the predition functions, classification trigger or even loaded your model mannually you may want to know wich models are in your memory. You can use the <code class="language-plaintext highlighter-rouge">get_loaded_models</code> function to check the models that are stored in your memory. This function will return a table that cotains the model key in the <code class="language-plaintext highlighter-rouge">GD</code> dictionary, the model path used to load the model and a <code class="language-plaintext highlighter-rouge">bytea</code> representation of the loaded model.</p>
+
+<p>You can call this function using:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">get_loaded_models</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">get_loaded_models</code> signature is:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FUNCTION</span> <span class="n">get_loaded_models</span><span class="p">()</span> <span class="k">RETURNS</span> 
+<span class="k">TABLE</span>  <span class="p">(</span>
+    <span class="n">model_key</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">model_path</span> <span class="nb">TEXT</span><span class="p">,</span>
+    <span class="n">model</span> <span class="n">BYTEA</span>
+<span class="p">)</span> 
+</code></pre></div></div>
+
+<p>If you want to check if a specific model is loaded in your memory you can use the <code class="language-plaintext highlighter-rouge">is_model_loaded</code> function to check for a specific model:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">is_model_loaded</span><span class="p">(</span><span class="s1">'/home/vagrant/examples/iris/models/iris_decision_tree.joblib'</span><span class="p">);</span>
+<span class="c1">-- Returns True if the model is already loaded in the memory</span>
+</code></pre></div></div>
+
+<p>The function signature is:</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FUNCTION</span> <span class="n">is_model_loaded</span><span class="p">(</span><span class="n">model_path</span> <span class="nb">text</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="nb">BOOL</span>
+</code></pre></div></div>
+
+<h1 id="remove-models-from-the-memory">Remove models from the memory</h1>
+
+<p>If you want to remove a model from the memory you can use the <code class="language-plaintext highlighter-rouge">unload_model</code> function. You just need to pass the model path and if it is found in the <code class="language-plaintext highlighter-rouge">GD</code> dictionay it will be deleted:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Remove the model from the memory</span>
+<span class="k">SELECT</span> <span class="n">unload_model</span><span class="p">(</span><span class="s1">'/home/vagrant/examples/iris/models/iris_decision_tree.joblib'</span><span class="p">);</span>
+
+<span class="c1">-- Checks if the model stills in the GD dictionary</span>
+<span class="k">SELECT</span> <span class="n">is_model_loaded</span><span class="p">(</span><span class="s1">'/home/vagrant/examples/iris/models/iris_decision_tree.joblib'</span><span class="p">);</span>
+<span class="c1">-- Returns False</span>
+</code></pre></div></div>
+
+<p>The function signature is:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FUNCTION</span> <span class="n">unload_model</span><span class="p">(</span><span class="n">model_path</span> <span class="nb">text</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">VOID</span>
+</code></pre></div></div>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/Minoro/pgpyml/edit/gh-pages/io/README.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

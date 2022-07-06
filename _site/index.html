@@ -1,6 +1,3 @@
----
-layout: none
----
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,7 +64,7 @@ dump(model, '~/models/my_model.joblib')</code>
                 </div>
                 <div class="code-example">
                     <pre class="input">
-                        <code class="code language-sql">{% raw %}SELECT * FROM predict(
+                        <code class="code language-sql">SELECT * FROM predict(
     '~/models/my_model.joblib', 
     '{{5.2,3.5,1.5,0.2}}'
 );
@@ -78,7 +75,7 @@ SELECT * FROM predict_table_row(
     '{"sepal_length", "sepal_width", 
     "petal_length", "petal_width"}', 
     (SELECT MAX(id) FROM iris)
-);{% endraw %}
+);
     </code></pre>
                 </div>
             </div>
