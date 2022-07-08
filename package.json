@@ -1,6 +1,6 @@
 {
   "name": "pgpyml",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Deploy your python machine learning models in your database",
   "main": "index.js",
   "directories": {

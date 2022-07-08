@@ -16,7 +16,7 @@ features = []
 for feature_column_name in features_columns_names:
 	features.append(TD['new'][feature_column_name])
 
-stmt = plpy.prepare("SELECT predict($1, $2)", ['text', 'real[]'])
+stmt = plpy.prepare("SELECT pgpyml.predict($1, $2)", ['text', 'real[]'])
 results =  plpy.execute(stmt, [model_path, [features]], 1)
 
 prediction = results[0]['predict'][0]
@@ -48,7 +48,7 @@ features = []
 for feature_column_name in features_columns_names:
 	features.append(TD['new'][feature_column_name])
 
-stmt = plpy.prepare("SELECT predict($1, $2)", ['text', 'real[]'])
+stmt = plpy.prepare("SELECT pgpyml.predict($1, $2)", ['text', 'real[]'])
 results =  plpy.execute(stmt, [model_path, [features]], 1)
 
 prediction = results[0]['predict'][0]
@@ -80,7 +80,7 @@ features = []
 for feature_column_name in features_columns_names:
 	features.append(TD['new'][feature_column_name])
 
-stmt = plpy.prepare("SELECT predict($1, $2)", ['text', 'real[]'])
+stmt = plpy.prepare("SELECT pgpyml.predict($1, $2)", ['text', 'real[]'])
 results =  plpy.execute(stmt, [model_path, [features]], 1)
 
 prediction = results[0]['predict'][0]
@@ -102,7 +102,7 @@ $$ LANGUAGE plpython3u;
 * The third argurment is the value to be compared. If the prediction is equals to this value it will raise an exception
 * Any other argument will be used as the columns name with the features to be predicted.
 */
-CREATE OR REPLACE FUNCTION trigger_classification_or_abort_unless_prediction_is() RETURNS trigger AS
+CREATE OR REPLACE FUNCTION pgpyml.trigger_classification_or_abort_unless_prediction_is() RETURNS trigger AS
 $$
 model_path = TD['args'][0] 
 target_column_name = TD['args'][1]
@@ -113,7 +113,7 @@ features = []
 for feature_column_name in features_columns_names:
 	features.append(TD['new'][feature_column_name])
 
-stmt = plpy.prepare("SELECT predict($1, $2)", ['text', 'real[]'])
+stmt = plpy.prepare("SELECT pgpyml.predict($1, $2)", ['text', 'real[]'])
 results =  plpy.execute(stmt, [model_path, [features]], 1)
 
 prediction = results[0]['predict'][0]
