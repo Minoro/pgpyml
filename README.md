@@ -20,9 +20,9 @@ pgxn install pgpyml
 
 And create the extension on your database:
 ```sql
--- Create a new schema (optional)
+-- Create a new schema
 CREATE SCHEMA IF NOT EXISTS pgpyml
--- This extension
+-- Create the extension on pgpyml schema
 CREATE EXTENSION pgpyml SCHEMA pgpyml CASCADE;
 ```
 

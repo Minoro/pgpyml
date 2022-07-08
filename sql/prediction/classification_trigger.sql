@@ -5,7 +5,7 @@
 * The second parameter must be to column where the classification result will be saved
 * The others arguments will be used as features columns names
 */
-CREATE OR REPLACE FUNCTION classification_trigger() RETURNS trigger AS
+CREATE OR REPLACE FUNCTION pgpyml.classification_trigger() RETURNS trigger AS
 $$
 model_path = TD['args'][0] 
 target_column_name = TD['args'][1]
@@ -15,7 +15,7 @@ features = []
 for feature_column_name in features_columns_names:
 	features.append(TD['new'][feature_column_name])
     
-stmt = plpy.prepare("SELECT predict($1, $2)", ['text', 'real[]'])
+stmt = plpy.prepare("SELECT pgpyml.predict($1, $2)", ['text', 'real[]'])
 results =  plpy.execute(stmt, [model_path, [features]], 1)
 
 prediction = results[0]['predict'][0]

@@ -3,7 +3,7 @@
 * The model will be stored on the special GD dictionary.
 * The model path will be prefixed with 'model_' and will be used as key to access to model in the GD dictionary.
 */
-CREATE OR REPLACE FUNCTION load_model(model_path text) RETURNS BYTEA AS
+CREATE OR REPLACE FUNCTION pgpyml.load_model(model_path text) RETURNS BYTEA AS
 $$
 
 import pickle
@@ -27,7 +27,7 @@ $$ LANGUAGE plpython3u;
 /**
 * Get the models loaded in the memory
 */
-CREATE OR REPLACE FUNCTION get_loaded_models() RETURNS 
+CREATE OR REPLACE FUNCTION pgpyml.get_loaded_models() RETURNS 
 TABLE  (
     model_key TEXT,
     model_path TEXT,
@@ -57,7 +57,7 @@ $$ LANGUAGE plpython3u;
 /**
 * Check if the model is already loaded to the memory.
 */
-CREATE OR REPLACE FUNCTION is_model_loaded(model_path text) RETURNS BOOL AS
+CREATE OR REPLACE FUNCTION pgpyml.is_model_loaded(model_path text) RETURNS BOOL AS
 $$
 
 model_key = 'model_' + model_path
@@ -73,7 +73,7 @@ $$ LANGUAGE plpython3u;
 * Remove the model from the memory if it is loaded.
 * The first argument is the model path that was loaded to the memory
 */
-CREATE OR REPLACE FUNCTION unload_model(model_path text) RETURNS VOID AS
+CREATE OR REPLACE FUNCTION pgpyml.unload_model(model_path text) RETURNS VOID AS
 $$
 
 model_key = 'model_' + model_path
