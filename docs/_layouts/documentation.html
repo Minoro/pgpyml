@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include head_data.html %}
+</head>
+<body class="get-started">
+    <header class="page-header page-header-menu">
+        {% include navbar.html %}
+    </header>
+
+    
+    <main class="main-content">
+        {% if page.show_sidebar %}
+            <aside class="side-menu">
+                {% include sidebar.html %}
+            </aside>
+        {% endif %}
+
+        <div class="page-content">
+            {{ content }}
+        </div>
+    </main>
+
+    {% include footer.html %}
+    {% include scripts.html %}
+</body>
+</html>

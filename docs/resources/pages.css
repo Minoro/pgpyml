@@ -90,6 +90,9 @@ code {
     font-style: italic;
 }
 
+.strong {
+    font-weight: bold;
+}
 
 .page-footer
 {
