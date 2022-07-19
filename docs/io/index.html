@@ -1,0 +1,89 @@
+---
+layout: documentation
+title: IO - PGPYML
+description:
+
+show_sidebar: true
+
+navigation:
+    0 :
+        link: loading-model
+        name: Loading
+    1 : 
+        link : cheking-loaded-models
+        name : Checking Loaded
+    2 :
+        link : remove-models-from-memory
+        name : Unloading
+    4 :
+        link : next-steps
+        name : Next Steps
+---
+<section id="loading-model" class="section">
+    <div class="container">
+        <h1>Loading</h1>
+        <p>Under the hood, the <span class="strong">pgpyml</span> extension will load the model you trained in the memory to be used in a Postgres session. The model will be loaded to the <span class="emph">GD</span> dictionary, the key will be the path to your model prefixed with <span class="emph">model_</span>. That means that if you load the model <span class="emph">/home/vagrant/examples/iris/models/iris_decision_tree.joblib</span> you will be able to access it in your <span class="emph">plpython3u</span> function with:</p>
+        {% highlight sql%}{% raw %}model = GD['model_/home/vagrant/examples/iris/models/iris_decision_tree.joblib']{% endraw %}{% endhighlight %}
+    
+        <p>If you are using the <span class="emph">predict</span> function or the classification triggers you don't need to worry about loading the model by yourself, the <span class="strong">pgpyml</span> extension will load it and store in the <span class="emph">GD</span> dictionary.</p>
+        <p>Although you don't need to load the model manually, you can use the <span class="emph">load_model</span> function to load (or pre-load) a specific model to the memory. You just need to call this function with passing the model path as argument:</p>
+        
+        {% highlight sql%}{% raw %}SELECT load_model('/home/vagrant/examples/iris/models/iris_decision_tree.joblib');{% endraw %}{% endhighlight %}
+        
+        <p>The <span class="emph">load_model</span> signature is:</p>
+        
+        {% highlight sql%}{% raw %}FUNCTION load_model(model_path text) RETURNS BYTEA{% endraw %}{% endhighlight %}
+
+        <p>When you invoke the function <span class="emph">load_model</span> manually it will replace any model that already is in the memory to the specified path and will returs a <span class="emph">bytea</span> representation of the loaded model.</p>
+        <p>The model must be a <span class="emph">joblib</span> file. You can refer the <a href="https://scikit-learn.org/stable/modules/model_persistence.html">sklearn model persistence documentation</a> to see more about saving your model. Pay extra attention to the <a href="https://scikit-learn.org/stable/modules/model_persistence.html#security-maintainability-limitations">Security & maintainability limitations</a> section, the information in that section can be applyed to <span class="emph">pgpyml</span>. <span class="strong">Never use an untrusted pickle/joblib file</span>.</p>
+    </div>
+</section>
+
+<section id="cheking-loaded-models">
+    <div class="container">
+        <h1>Checking Loaded</h1>
+        <p>Once you have used one of the predition functions, classification trigger or even loaded your model mannually you may want to know wich models are in your memory. You can use the <span class="emph">get_loaded_models</span> function to check the models that are stored in your memory. This function will return a table that cotains the model key in the <span class="emph">GD</span> dictionary, the model path used to load the model and a <span class="emph">bytea</span> representation of the loaded model.</p>
+        <p>You can call this function using:</p>
+    
+        {% highlight sql%}{% raw %}SELECT * FROM get_loaded_models();{% endraw %}{% endhighlight %}
+    
+        <p>The <span class="emph">get_loaded_models</span> signature is:</p>
+
+        {% highlight sql%}{% raw %}FUNCTION get_loaded_models() RETURNS 
+TABLE  (
+    model_key TEXT,
+    model_path TEXT,
+    model BYTEA
+){% endraw %}{% endhighlight %}
+
+        <p>If you want to check if a specific model is loaded in your memory you can use the <span class="emph">is_model_loaded</span> function to check for a specific model:</p>
+    
+        {% highlight sql%}{% raw %}SELECT is_model_loaded('/home/vagrant/examples/iris/models/iris_decision_tree.joblib');
+-- Returns True if the model is already loaded in the memory{% endraw %}{% endhighlight %}
+
+        <p>The function signature is:</p>
+        {% highlight sql%}{% raw %}FUNCTION is_model_loaded(model_path text) RETURNS BOOL{% endraw %}{% endhighlight %}
+    </div>
+</section>
+
+<section id="remove-models-from-memory" class="section">
+    <div class="container">
+        <h1>Unloading</h1>
+        <p>If you want to remove a model from memory you can use the <span class="emph">unload_model</span> function. You just need to pass the model path and if it is found in the <span>GD</span> dictionay it will be deleted:</p>
+        
+        {% highlight sql%}{% raw %}-- Remove the model from the memory
+SELECT unload_model('/home/vagrant/examples/iris/models/iris_decision_tree.joblib');
+
+-- Checks if the model stills in the GD dictionary
+SELECT is_model_loaded('/home/vagrant/examples/iris/models/iris_decision_tree.joblib');
+-- Returns False{% endraw %}{% endhighlight %}
+
+        <p>The function signature is:</p>
+
+        {% highlight sql%}{% raw %}FUNCTION unload_model(model_path text) RETURNS VOID{% endraw %}{% endhighlight %}
+
+    </div>
+</section>
+
+
+

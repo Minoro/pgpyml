@@ -1,144 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Instructions to install the pgpyml extension and use machine learning models in PostgresSQL.">
-    <meta name="keywords" content="Machine Learning, PostgreSQL, Postgres, Python, Sklearn, Deploy, in-database">
-    <meta name="author" content="André Minoro FUsioka">
-    <title>Get Started - PGPYML</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="../resources/pages.css">
-    <link rel="stylesheet" href="../resources/navigation.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
-</head>
-<body class="get-started">
-    <header class="page-header page-header-menu">
-        <nav class="main-menu  gradient-bg">
-            <ul class="container">
-                <li><a class="menu-link" href="https://minoro.github.io/pgpyml/">PGPYML</a></li>
-                <li><a class="menu-link" href="https://github.com/Minoro/pgpyml">View on GitHub</a></li>
-                <li><a class="menu-link" href="https://pgxn.org/dist/pgpyml">View on PGXN</a></li>
-                <li><a class="menu-link" href="https://minoro.github.io/pgpyml/get-started">Documentation</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    
-    <main class="main-content">
-        <aside class="side-menu">
-            <nav class="nav-container">
-                <ul>
-                    <li><a class="menu-link" href="#presentation">PGPYML</a></li>
-                    <li>
-                        <a class="menu-link" href="#install">Install</a>
-                        <ul class="sub-menu">
-                            <li><a class="menu-link" href="#prerequisites">Prerequisites</a></li>
-                            <li><a class="menu-link" href="#install-with-pgnxclient">Install with PGNXClient</a></li>
-                            <li><a class="menu-link" href="#install-with-git">Install with Git</a></li>
-                            <li><a class="menu-link" href="#creating-the-extension">Create the Extension</a></li>
-                            <li><a class="menu-link" href="#vagrant">Vagrant</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="menu-link" href="#train-your-model">Train Your Model</a></li>
-                    <li><a class="menu-link" href="#deploy">Deploy</a></li>
-                </ul>
-            </nav>
-        </aside>
-
-        <div class="page-content">
-
-            <section id="presentation" class="section">
-                <div class="container">
-                    <div>
-                        <h1 class="title">PGPYML</h1>
-                        <p>Python is a popular programming language to develop machine learning solutions. You may use it to do some exploratory data analysis and write a model to do predictions over new data. When you are satisfied with the results produced by your model you will deploy it, but this task can be time-consuming. With pgpyml you can easily use your model as an in-database solution and take the <a href="https://blogs.oracle.com/bigdata/post/why-you-should-use-your-database-for-machine-learning" target="_blank">advantages of this approach</a>.</p>
-                        <p>Pgpyml is an extension that allows you to use your models written in Python inside PostgreSQL. You can make predictions directly on the data being inserted at your base, you can also create triggers to avoid insertions based on the predictions.</p>
-                        <p>This extension is under development, designed to be compatible with sklearn and is not ready to be used in the production environment.</p>
-                    </div>
-            </section>
+---
+layout: documentation
+title: Get Started - PGPYML
+description: Deploy Python models on PostgresSQL. Instructions to install the pgpyml extension and apply python machine learning models on your data.
 
 
-            <section id="install" class="section">
-                <div class="container">
-                    <div >
-                        <h2 class="title">Instalation</h2>
-                        <p>This section will instruct you how to install the <strong>pgpyml</strong> extension. You must follow the <a href="#prerequisites">Prerequisites</a> section and choose the <a href="#install-with-pgnxclient">pgxnclient instructions</a> or the <a href="#install-with-git">git installation</a>. Once the installation is done you can <a href="#creating-the-extension">create the extension</a> on your database.</p>
-                        <p>Alternatively you can use the <a href="#vagrant">Vagrant machine</a> to test it.</p>
-                    </div>
+show_sidebar: true
 
-                    <div class="mt" id="prerequisites">   
-                        <h3 class="sub-title">Prerequisites</h3>
-                        <p>First of all, you will need to install the python libraries that are used to write and run your machine learning models:</p>
-                        <pre><code class="language-shell">pip3 install numpy scikit-learn pandas</code></pre>
-                        <p>This command install the <span class="emph">numpy</span>, <span class="emph">sklearn</span> and <span class="emph">pandas</span> libraries. The <span class="emph">pgpyml</span> extension expects that you use <span class="emph">sklearn</span> to build your models.</p>
-                        
-                        <p>You will need to install the Python extension for PostgreSQL. You can do this with the command:</p>
-                        <pre><code class="language-shell"># Replace the &lt;version&gt; with your PostgreSQL version
+navigation:
+    0 :
+        link: presentation
+        name: PGPYML
+    1 :
+        link: install
+        name: Install
+        subnavigation:
+            0 :
+                link: prerequisites
+                name: Prerequisites
+            1 :
+                link: install-with-pgnxclient
+                name: Install with PGNXClient
+            2 :
+                link: install-with-git
+                name: Install with Git
+            3 : 
+                link: creating-the-extension
+                name: Create the Extension
+            4 :
+                link: vagrant
+                name: Vagrant
+    2 : 
+        link : train-your-model
+        name : Train Your Model
+    3 : 
+        link : deploy
+        name : Deploy
+    4 :
+        link : next-steps
+        name : Next Steps 
+
+---
+
+
+<section id="presentation" class="section">
+    <div class="container">
+        <div>
+            <h1 class="title">PGPYML</h1>
+            <p>Python is a popular programming language to develop machine learning solutions. You may use it to do some exploratory data analysis and write a model to do predictions over new data. When you are satisfied with the results produced by your model you will deploy it, but this task can be time-consuming. With pgpyml you can easily use your model as an in-database solution and take the <a href="https://blogs.oracle.com/bigdata/post/why-you-should-use-your-database-for-machine-learning" target="_blank">advantages of this approach</a>.</p>
+            <p>Data Scientists may not know how to deploy models, or don't know how to use python to do it. On the other hand, Software Engineers may don't have knowledge to build machine learning models. The database unites Software Engineers and Data Scientists, <span class="strong">pgpyml</span> is an extension that allows you to use your models written in Python inside PostgreSQL. You can make predictions directly on the data being inserted at your base, you can also create triggers to avoid insertions based on the predictions. With this extension, Data Scientists can focus on building models while Software Engineers can build the MVP.</p>
+            <p>This extension is under development, designed to be compatible with sklearn and is not ready to be used in the production environment.</p>
+        </div>
+</section>
+
+
+<section id="install" class="section">
+    <div class="container">
+        <div >
+            <h2 class="title">Instalation</h2>
+            <p>This section will instruct you how to install the <strong>pgpyml</strong> extension. You must follow the <a href="#prerequisites">Prerequisites</a> section and choose the <a href="#install-with-pgnxclient">pgxnclient instructions</a> or the <a href="#install-with-git">git installation</a>. Once the installation is done you can <a href="#creating-the-extension">create the extension</a> on your database.</p>
+            <p>Alternatively you can use the <a href="#vagrant">Vagrant machine</a> to test it.</p>
+        </div>
+
+        <div class="mt" id="prerequisites">   
+            <h3 class="sub-title">Prerequisites</h3>
+            <p>First of all, you will need to install the python libraries that are used to write and run your machine learning models:</p>
+            <pre><code class="language-shell">pip3 install numpy scikit-learn pandas</code></pre>
+            <p>This command install the <span class="emph">numpy</span>, <span class="emph">sklearn</span> and <span class="emph">pandas</span> libraries. The <span class="emph">pgpyml</span> extension expects that you use <span class="emph">sklearn</span> to build your models.</p>
+            
+            <p>You will need to install the Python extension for PostgreSQL. You can do this with the command:</p>
+            <pre><code class="language-shell"># Replace the &lt;version&gt; with your PostgreSQL version
 apt -y install postgresql-plpython3-&lt;version&gt;</code></pre>
-                        <p>Replace the <span class="emphasis">&lt;version&gt;</span> in the command with the Postgres version that you are using, for example, if you want to install the Python extension to Postgres 14 use:</p>
-                        <pre><code class="language-shell">apt -y install postgresql-plpython3-14</code></pre>
-                    </div>
-                    
-                    <div class="mt" id="install-with-pgnxclient">
-                        <h3 class="sub-title">Install with PGNXClient</h3>
-                        <p>You can install the extension using the <strong>pgnxclient</strong>, you will need to install it if you don't already have it:</p>
-                        <pre><code class="language-shell">apt install pgxnclient</code></pre>
-                        <p>And then you can install the <span class="emph">pgpyml</span> extension with:</p>
-                        <pre><code class="language-shell">pgxn install pgpyml</code></pre>
-                    </div>
+            <p>Replace the <span class="emphasis">&lt;version&gt;</span> in the command with the Postgres version that you are using, for example, if you want to install the Python extension to Postgres 14 use:</p>
+            <pre><code class="language-shell">apt -y install postgresql-plpython3-14</code></pre>
+        </div>
+        
+        <div class="mt" id="install-with-pgnxclient">
+            <h3 class="sub-title">Install with PGNXClient</h3>
+            <p>You can install the extension using the <strong>pgnxclient</strong>, you will need to install it if you don't already have it:</p>
+            <pre><code class="language-shell">apt install pgxnclient</code></pre>
+            <p>And then you can install the <span class="emph">pgpyml</span> extension with:</p>
+            <pre><code class="language-shell">pgxn install pgpyml</code></pre>
+        </div>
 
-                    <div class="mt" id="install-with-git">
-                        <h3 class="sub-title">Install with Git</h3>
-                        <p>You can install the <span class="emph">pgpyml</span> with git, cloning the repository and running the instalation script. To do this, first clone the extension's repository:</p>
+        <div class="mt" id="install-with-git">
+            <h3 class="sub-title">Install with Git</h3>
+            <p>You can install the <span class="emph">pgpyml</span> with git, cloning the repository and running the instalation script. To do this, first clone the extension's repository:</p>
 
-                        <pre><code class="language-shell">git clone -b v0.3.0 https://github.com/Minoro/pgpyml.git</code></pre>
+            <pre><code class="language-shell">git clone -b v{{ site.current_version }} https://github.com/Minoro/pgpyml.git</code></pre>
 
-                        <p>Change the <span class="emph">v0.3.0</span> to the <a href="https://github.com/Minoro/pgpyml/tags">desired version</a>. And inside the downloaded folder run the make file:</p>
+            <p>Change the <span class="emph">v{{ site.current_version }}</span> to the <a href="https://github.com/Minoro/pgpyml/tags">desired version</a>. And inside the downloaded folder run the make file:</p>
 
-                        <pre><code class="language-shell">make install 
+            <pre><code class="language-shell">make install 
 make clean</code></pre>
-                    </div>
+        </div>
 
-                    <div class="mt" id="creating-the-extension">
-                        <h3 class="sub-title">Create the Extension</h3>
-                        <p>Once you have installed the extension you can create it on your PostgreSQL:</p>
-                        <pre><code class="language-sql">-- Python Language extension
-CREATE EXTENSION plpython3u;
-
--- Create a new schema to install the extension (optional)
+        <div class="mt" id="creating-the-extension">
+            <h3 class="sub-title">Create the Extension</h3>
+            <p>Once you have installed the extension you can create it on your PostgreSQL:</p>
+            <pre><code class="language-sql">-- Create a new schema to install the extension
 CREATE SCHEMA pgpyml;
 -- Create the extension in the new schema
 CREATE EXTENSION pgpyml SCHEMA pgpyml CASCADE;</code></pre>
-                    </div>
+        </div>
 
-                    <div class="mt" id="vagrant">
-                        <h2 class="title">Using the Vagrant Machine</h2>
-                        <p>The <strong>pgpyml</strong> repository has a Vagrantfile that you can use to test this extension, the repository also include an example of how you can train and save a model. The example use the UCI Iris Dataset, with are also included in the repository.</p> 
-                        <p>To use the vagrant machine you can navigate to the vagrant folder and run:</p>
-            
-                        <pre class="language-shell"><code>vagrant up    # Initiate the machine
+        <div class="mt" id="vagrant">
+            <h2 class="title">Using the Vagrant Machine</h2>
+            <p>The <strong>pgpyml</strong> repository has a Vagrantfile that you can use to test this extension, the repository also include an example of how you can train and save a model. The example use the UCI Iris Dataset, with are also included in the repository.</p> 
+            <p>To use the vagrant machine you can navigate to the vagrant folder and run:</p>
+
+            <pre class="language-shell"><code>vagrant up    # Initiate the machine
 vagrant ssh   # Acess the machine</code></pre>
-         
-                        <p>After that you will be able to connect to Postgresql on host <a href="http://localhost:5555">http://localhost:5555</a> through your host machine.</p>
-                        <p>Although it is not necessary to use the vagrant file from the extension repository, the examples will be displayed using the paths of the virtual machine.</p>
 
-                    </div>
+            <p>After that you will be able to connect to Postgresql on host <a href="http://localhost:5555">http://localhost:5555</a> through your host machine.</p>
+            <p>Although it is not necessary to use the vagrant file from the extension repository, the examples will be displayed using the paths of the virtual machine.</p>
 
-                </div>
-            </section>
+        </div>
 
-            <section id="train-your-model">
-                <div class="container">
-                    <h1 class="title">Train Your Model</h1>
-                    <p>You can train your model as you are used to. The Sklearn documentation has many <a href="https://scikit-learn.org/stable/auto_examples/index.html" target="_blank">examples</a> that you can use, in this section we will build a minimal example using Python and Sklearn and deploy it on Python.</p>
-                    <p>We will use the <a href="https://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html" target="_blank">Iris Dataset</a> as an example, we will build a model to predict the class of new instances and use it on PostgresSQL.</p> 
-                    <p>Let's create a file named <span class="inline-code">train.py</span> with the code:</p>
+    </div>
+</section>
 
-                    <pre class="language-python"><code># Script: train.py
+<section id="train-your-model">
+    <div class="container">
+        <h1 class="title">Train Your Model</h1>
+        <p>You can train your model as you are used to. The Sklearn documentation has many <a href="https://scikit-learn.org/stable/auto_examples/index.html" target="_blank">examples</a> that you can use, in this section we will build a minimal example using Python and Sklearn and deploy it on Python.</p>
+        <p>We will use the <a href="https://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html" target="_blank">Iris Dataset</a> as an example, we will build a model to predict the class of new instances and use it on PostgresSQL.</p> 
+        <p>Let's create a file named <span class="inline-code">train.py</span> with the code:</p>
+
+        <pre class="language-python"><code># Script: train.py
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import datasets
 from joblib import dump, load
@@ -152,37 +140,26 @@ model = DecisionTreeClassifier()
 model.fit(X, y)
 dump(model, '/home/vagrant/models/iris_decision_tree.joblib')</code></pre>
 
-                    <p>After running this code you will see an file named <span class="inline-code">iris_decision_tree.joblib</span> in the same folder that you runned the training script. This is the model that we will deploy on PostgreSQL. You can read more about persisting your models on <a href="https://scikit-learn.org/stable/modules/model_persistence.html" target="_blank">Sklearn Documentation</a>.</p>
-                </div>
-            </section>
+        <p>After running this code you will see an file named <span class="inline-code">iris_decision_tree.joblib</span> in the same folder that you runned the training script. This is the model that we will deploy on PostgreSQL. You can read more about persisting your models on <a href="https://scikit-learn.org/stable/modules/model_persistence.html" target="_blank">Sklearn Documentation</a>.</p>
+    </div>
+</section>
 
-            <section id="deploy">
-                <div class="container">
-                    <h1 class="title">Deploy on PostgresSQL</h1>
-                    <p>Now you have everything you need to deploy your Machine Learning model on PostgresSQL. Run the following command to make a prediction on new data:</p>
+<section id="deploy">
+    <div class="container">
+        <h1 class="title">Deploy on PostgresSQL</h1>
+        <p>Now you have everything you need to deploy your Machine Learning model on PostgresSQL. Run the following command to make a prediction on new data:</p>
 
-                    <pre class="language-sql"><code>SELECT * FROM pgpyml.predict_table_row(
-    '/home/vagrant/models/iris_decision_tree.joblib', -- The trained model
-    'iris', -- Table with the data
-    '{"sepal_length", "sepal_width", "petal_length", "petal_width"}', -- The columns used as feature
-    1 -- The ID of your data
+        <pre class="language-sql"><code>SELECT * FROM pgpyml.predict(
+    '/home/vagrant/examples/iris/models/iris_decision_tree.joblib', 
+    ARRAY[[5.2,3.5,1.5,0.2], [7.7,2.8,6.7,2.0]]
 );</code></pre>
-                    <p>This command will load your model and use it to predict a single row in your database. The first parameters is the model you want to use, the second one is the table in your database where your data is stored, se third parameter is a <strong>array</strong> with the name of the columns that hold the data to use with your model, the final parameter is the <strong>ID</strong> of the data you want to predict.</p>
-                </div>
-            </section>
-        </div>
-    </main>
+        <p>This command will load your model and use it to predict a single row in your database. The first parameters is the model you want to use, the second one is an array with the data you want to predict.</p>
+    </div>
+</section>
 
-    <footer class="page-footer">
-        <div class="content">
-            <p class="description"><a href="https://github.com/Minoro/pgpyml">pgpyml</a> is maintained by <a href="https://github.com/Minoro">Minoro</a></p>
-        </div>
-    </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/sql.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/shell.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/python.min.js"></script>
-    <script>hljs.highlightAll();</script>
-</body>
-</html>
+<section id="next-steps">
+    <div class="container">
+        <h1 class="title">Next Steps</h1>
+        <p>This extensions have more functions that you can use to run your models. You can read more about loading and unloading models in the <a href="{{ site.baseurl }}/io">IO Page</a>, you can read more about predictions and triggers in the <a href="{{ site.baseurl }}/prediction">Prediction Page</a>.</p>
+    </div>
+</section>

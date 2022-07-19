@@ -3,11 +3,17 @@
 [![PGXN version](https://badge.fury.io/pg/pgpyml.svg)](https://badge.fury.io/pg/pgpyml) [![License](https://img.shields.io/badge/license-PostgreSQL-informational)](https://img.shields.io/badge/license-PostgreSQL-informational) [![Issues](https://img.shields.io/github/issues/Minoro/pgpyml)](https://github.com/Minoro/pgpyml/issues)
 
 
-![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
+[![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/) [![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
 
 This repository contains an Postgres extension that allows you to run your machine learning algorithms written in python and invoke them on Postgres. This way you can write your script in the way you are used to, and apply it right on your data. You can train and save your `sklearn` models and call then with the data stored on Postgres.
 
 You can read more in the [Documentation](https://minoro.github.io/pgpyml/).
+
+# Work In Progress (WIP)
+
+This extension is not production-ready, but can be used to build a machine learning or data science MVP. You may work on a team with data scientists and fullstack developers, with pgpyml the data scientists can focus on the data while the "fullstackers" can focus on the presentation of the MVP. 
+
+**Contributions and suggestions are welcome**.
 
 
 # Install
@@ -20,9 +26,9 @@ pgxn install pgpyml
 
 And create the extension on your database:
 ```sql
--- Create a new schema (optional)
+-- Create a new schema
 CREATE SCHEMA IF NOT EXISTS pgpyml
--- This extension
+-- Create the extension on pgpyml schema
 CREATE EXTENSION pgpyml SCHEMA pgpyml CASCADE;
 ```
 
@@ -35,16 +41,14 @@ After training your model, you can save it using `joblib`:
 ```python
 from sklearn.tree import DecisionTreeClassifier
 from joblib import dump, load
-
-# some code... 
+    
+# some code to load your data...
 
 model = DecisionTreeClassifier()
 
 model.fit(X_train, y_train)
 dump(model, './iris_decision_tree.joblib')
 ```
-
-If you want to see a full example, this repository has and example using the [UCI Iris Dataset](https://archive.ics.uci.edu/ml/datasets/Iris/). The data are splited in two CSV files inside `dataset/sample_data` folder, one you can use to train and test your model  and the other you may use to simulate a new data to insert on your database. The script `src/mode/train_iris_decision_tree.py` has a full example how to train and save your model using this dataset.
 
 Once your model are ready, you can use it right on your data stored on Postgres.
 
@@ -53,13 +57,16 @@ Once your model are ready, you can use it right on your data stored on Postgres.
 You can use the `predict` function to apply the trained model on your stored data.
 ```sql
 -- Notice that the features are passed as a nested array
-SELECT * FROM predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
+SELECT * FROM pgpyml.predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}}');
 -- Output: {Iris-setosa} (or any other class your model predict)
 
 -- You can pass many features at once
-SELECT * FROM predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}');
+SELECT * FROM pgpyml.predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', '{{5.2,3.5,1.5,0.2}, {7.7,2.8,6.7,2.0}}');
 -- Output: {Iris-setosa,Iris-virginica}
 
+-- You can also use the ARRAY notation
+SELECT * FROM pgpyml.predict('/home/vagrant/examples/iris/models/iris_decision_tree.joblib', ARRAY[[5.2,3.5,1.5, 0.2], [7.7,2.8,6.7,2.0]]);
+-- Output: {Iris-setosa,Iris-virginica}
 ```
 The first argument is the path to your trained model, this path must be reachable by your Postgres server. The second argument is a list of features array, each element of the list will have an element on the output. The output are an text array with the predictions of your model.
 
@@ -213,6 +220,9 @@ SELECT * FROM iris WHERE id = (SELECT MAX(id) FROM iris);
 ```
 
 The `trigger_classification_or_abort_if_prediction_is` and `trigger_classification_or_abort_unless_prediction_is` accept the same paremeters, the first one is the path to the model that will do the predictions, the second one the name of the column that will store the prediction, the thrid value is the prediction expected, and the others parameters will be used as columns name to get the values used in the prediction.
+
+# Getting Deeper
+You can read more about this extension and see other functions on the [Official Documentation](https://minoro.github.io/pgpyml)
 
 # Vagrant
 If you want to test this extension you can use the vagrant configuration inside the directory `vagrant/Vagrantfile`, this machine use Ubuntu, has a Postgres 14 installed and map the default port `5432` to `5555` in the host machine. This respository will be maped inside `/home/vagrant/examples/` directory. To use this vagrant machine. inside `vagrant` directory, run:

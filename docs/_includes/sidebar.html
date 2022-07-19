@@ -1,0 +1,14 @@
+<nav class="nav-container">
+    <ul>
+        {% for item in page.navigation %}
+            <li><a href="#{{ item[1].link }}" class="menu-link">{{ item[1].name }}</a></li>
+            {% if item[1].subnavigation %}
+                <ul class="sub-menu">
+                    {% for subitem in item[1].subnavigation %}
+                        <li><a href="#{{ subitem[1].link }}" class="menu-link">{{ subitem[1].name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>

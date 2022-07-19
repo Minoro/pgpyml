@@ -1,3 +1,7 @@
+# [0.3.1] - FIX: New Schema
+- Fix: Use the new schema properly
+- Fix: Return empty when null is passed to the predict function
+
 # [0.3.0] - New Schema
 - Create a new schema when the extension is created
 
